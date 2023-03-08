@@ -22,17 +22,33 @@ protected:
 private:
 	float m_TotalTimeToRest{ 3.f };
 	float m_AccTimeToRest{ 0.f };
-	SpherePrefab* m_pRedSphere{ nullptr };
-	const static int m_TotalCollObjsPerType{ 2 };
-	CubePrefab* m_pCubes[2]{ nullptr,nullptr };
-	CubePrefab* m_pFloorAndGround[2]{ nullptr,nullptr };
-	CubePrefab* m_pWalls[2]{ nullptr,nullptr };
 	const float m_BallSpeed{ 5.5f };
+	const float m_CubeSpeed{ 5.5f };
+	const static int m_TotalCollObjsPerType{ 2 };
+	SpherePrefab* m_pRedSphere{ nullptr };
+	CubePrefab* m_pCubes[2]{ nullptr,nullptr };
+	CubePrefab* m_pFloorAndRoof[2]{ nullptr,nullptr };
+	CubePrefab* m_pWalls[2]{ nullptr,nullptr };
 	XMFLOAT2 m_BallDir{ 1.f,1.f };
+
+	float m_CubeMinHeight{};
+	float m_CubeMaxHeight{};
+
 	enum Direction : int {
 		LeftRight,
 		UpDown
 	};
+
+	enum MovementInputPlayerOne : int {
+		p1Up,
+		p1Down
+	};
+
+	enum MovementInputPlayerTwo : int {
+		p2Up = 2,
+		p2Down = 3
+	};
+
 	void ChangeDirection(const Direction& direction);
 	void ResetBall();
 
@@ -40,5 +56,7 @@ private:
 	void InitCubes(PxMaterial* mat);
 	void InitGroundAndFloor(PxMaterial* mat);
 	void InitWalls(PxMaterial* mat);
+	void AddInput();
+	void MoveCube(CubePrefab* prefab, float distance);
 };
 

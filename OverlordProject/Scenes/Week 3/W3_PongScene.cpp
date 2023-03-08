@@ -24,6 +24,7 @@ void W3_PongScene::Initialize()
 	InitCubes(pBouncyMaterial);
 	InitGroundAndFloor(pBouncyMaterial);
 	InitWalls(pBouncyMaterial);
+	AddInput();
 
 }
 
@@ -42,7 +43,25 @@ void W3_PongScene::Update()
 
 	m_pRedSphere->GetTransform()->Translate(ballPos);
 
-	
+	if (m_SceneContext.pInput->IsActionTriggered(MovementInputPlayerOne::p1Up))
+	{
+		MoveCube(m_pCubes[0], m_CubeSpeed * deltaTime);
+	}
+
+	if (m_SceneContext.pInput->IsActionTriggered(MovementInputPlayerOne::p1Down))
+	{
+		MoveCube(m_pCubes[0], -m_CubeSpeed * deltaTime);;
+	}
+
+	if (m_SceneContext.pInput->IsActionTriggered(MovementInputPlayerTwo::p2Up))
+	{
+		MoveCube(m_pCubes[1], m_CubeSpeed * deltaTime);
+	}
+
+	if (m_SceneContext.pInput->IsActionTriggered(MovementInputPlayerTwo::p2Down))
+	{
+		MoveCube(m_pCubes[1], -m_CubeSpeed * deltaTime);
+	}
 }
 
 void W3_PongScene::Draw()
@@ -80,7 +99,7 @@ void W3_PongScene::InitSphere(PxMaterial* mat)
 	auto pRigidBody = m_pRedSphere->AddComponent(new RigidBodyComponent());
 	m_pRedSphere->GetTransform()->Translate(0.f, 5.f, 0.f);
 	pRigidBody->SetConstraint(RigidBodyConstraint::All, false);
-	pRigidBody->AddCollider(PxSphereGeometry{ 1.f}, *mat);
+	pRigidBody->AddCollider(PxSphereGeometry{ 1.f }, *mat);
 }
 
 void W3_PongScene::InitCubes(PxMaterial* mat)
@@ -122,33 +141,35 @@ void W3_PongScene::InitCubes(PxMaterial* mat)
 
 void W3_PongScene::InitGroundAndFloor(PxMaterial* mat)
 {
-	XMFLOAT3 startPos { 0.f,-3.3f,0.f };
+	XMFLOAT3 startPos{ 0.f,-3.3f,0.f };
+	m_CubeMinHeight = startPos.y + .2f;
 	for (int i{}; i < m_TotalCollObjsPerType; ++i)
 	{
-		m_pFloorAndGround[i] = new CubePrefab{ 0.f,0.f,0.f,XMFLOAT4{Colors::White} };
-		AddChild(m_pFloorAndGround[i]);
-		auto pRigidBody = m_pFloorAndGround[i]->AddComponent(new RigidBodyComponent(true));
+		m_pFloorAndRoof[i] = new CubePrefab{ 0.f,0.f,0.f,XMFLOAT4{Colors::White} };
+		AddChild(m_pFloorAndRoof[i]);
+		auto pRigidBody = m_pFloorAndRoof[i]->AddComponent(new RigidBodyComponent(true));
 		auto colliderId = pRigidBody->AddCollider(PxBoxGeometry{ 20.f,.2f,1.f }, *mat);
 		auto colliderInfo = pRigidBody->GetCollider(colliderId);
 		colliderInfo.SetTrigger(true);
 	}
 
-	m_pFloorAndGround[0]->GetTransform()->Translate(startPos);
+	m_pFloorAndRoof[0]->GetTransform()->Translate(startPos);
 	startPos.y = 13.5f;
-	m_pFloorAndGround[1]->GetTransform()->Translate(startPos);
+	m_CubeMaxHeight = startPos.y + .2f;
+	m_pFloorAndRoof[1]->GetTransform()->Translate(startPos);
 
-	m_pFloorAndGround[0]->SetOnTriggerCallBack([=](GameObject* pTrigger, GameObject* pOther, PxTriggerAction action)
+	m_pFloorAndRoof[0]->SetOnTriggerCallBack([=](GameObject* pTrigger, GameObject* pOther, PxTriggerAction action)
 		{
-			if (pTrigger == m_pFloorAndGround[0] && pOther == m_pRedSphere && action == PxTriggerAction::ENTER)
+			if (pTrigger == m_pFloorAndRoof[0] && pOther == m_pRedSphere && action == PxTriggerAction::ENTER)
 			{
 				const Direction cubeDir{ Direction::UpDown };
 				ChangeDirection(cubeDir);
 			}
 		});
 
-	m_pFloorAndGround[1]->SetOnTriggerCallBack([=](GameObject* pTrigger, GameObject* pOther, PxTriggerAction action)
+	m_pFloorAndRoof[1]->SetOnTriggerCallBack([=](GameObject* pTrigger, GameObject* pOther, PxTriggerAction action)
 		{
-			if (pTrigger == m_pFloorAndGround[1] && pOther == m_pRedSphere && action == PxTriggerAction::ENTER)
+			if (pTrigger == m_pFloorAndRoof[1] && pOther == m_pRedSphere && action == PxTriggerAction::ENTER)
 			{
 				const Direction cubeDir{ Direction::UpDown };
 				ChangeDirection(cubeDir);
@@ -158,7 +179,7 @@ void W3_PongScene::InitGroundAndFloor(PxMaterial* mat)
 
 void W3_PongScene::InitWalls(PxMaterial* mat)
 {
-	XMFLOAT3 startPos { -15.f,-0.f,0.f };
+	XMFLOAT3 startPos{ -15.f,-0.f,0.f };
 	for (int i{}; i < m_TotalCollObjsPerType; ++i)
 	{
 		m_pWalls[i] = new CubePrefab{ 0.f,0.f,0.f,XMFLOAT4{Colors::White} };
@@ -188,4 +209,37 @@ void W3_PongScene::InitWalls(PxMaterial* mat)
 				ResetBall();
 			}
 		});
+}
+
+void W3_PongScene::AddInput()
+{
+	m_SceneContext.pInput->AddInputAction(InputAction{ MovementInputPlayerOne::p1Up,InputState::down,'W',-1,XINPUT_GAMEPAD_DPAD_UP,GamepadIndex::playerTwo });
+	m_SceneContext.pInput->AddInputAction(InputAction{ MovementInputPlayerOne::p1Down,InputState::down,'S',-1,XINPUT_GAMEPAD_DPAD_DOWN,GamepadIndex::playerTwo });
+	m_SceneContext.pInput->AddInputAction(InputAction{ MovementInputPlayerTwo::p2Up,InputState::down,VK_UP,-1,XINPUT_GAMEPAD_DPAD_UP,GamepadIndex::playerOne });
+	m_SceneContext.pInput->AddInputAction(InputAction{ MovementInputPlayerTwo::p2Down,InputState::down,VK_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN,GamepadIndex::playerOne });
+}
+
+void W3_PongScene::MoveCube(CubePrefab* prefab, float distance)
+{
+	auto cubePos = prefab->GetTransform()->GetPosition();
+	cubePos.y += distance;
+
+	auto pRigidBody = prefab->GetComponent<RigidBodyComponent>();
+	auto cubeHeight = pRigidBody->GetCollider(0).GetShape()->getGeometry().box().halfExtents.y;
+
+	if (cubePos.y <= m_CubeMinHeight)
+	{
+		cubePos.y = m_CubeMinHeight;
+	}
+
+	if (!pRigidBody)
+	{
+		return;
+	}
+	auto roofPos = m_pFloorAndRoof[1]->GetTransform()->GetPosition();
+	if (cubePos.y + cubeHeight >= m_CubeMaxHeight)
+	{
+		cubePos.y = m_CubeMaxHeight - cubeHeight;
+	}
+	prefab->GetTransform()->Translate(cubePos);
 }
