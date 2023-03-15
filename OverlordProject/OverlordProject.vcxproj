@@ -118,6 +118,7 @@
     </ClCompile>
     <ClCompile Include="Scenes\Week 3\W3_PongScene.cpp" />
     <ClCompile Include="Materials\UberMaterial.cpp" />
+    <ClCompile Include="Scenes\Week 4\UberMaterialScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OverlordEngine\OverlordEngine.vcxproj">
@@ -137,6 +138,7 @@
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Scenes\Week 3\W3_PongScene.h" />
     <ClInclude Include="Materials\UberMaterial.h" />
+    <ClInclude Include="Scenes\Week 4\UberMaterialScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
