@@ -12,10 +12,10 @@ void W3_PongScene::Initialize()
 	auto& physx = PxGetPhysics();
 	auto pBouncyMaterial = physx.createMaterial(.5f, .5f, 0.9f);
 
-	const auto pFreeCamera = new FixedCamera();
-	pFreeCamera->GetTransform()->Translate(0, 5.f, -20);
-	AddChild(pFreeCamera);
-	SetActiveCamera(pFreeCamera->GetComponent<CameraComponent>());
+	const auto pFixedCamera = new FixedCamera();
+	pFixedCamera->GetTransform()->Translate(0, 5.f, -20);
+	AddChild(pFixedCamera);
+	SetActiveCamera(pFixedCamera->GetComponent<CameraComponent>());
 
 	const XMFLOAT4 blackColor{ 0.f,0.f,0.f,1.f };
 	m_SceneContext.settings.clearColor = blackColor;
