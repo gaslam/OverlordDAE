@@ -72,7 +72,7 @@ bool gUseTextureDiffuse
 <
 	string UIName = "Diffuse Texture";
 	string UIWidget = "Bool";
-> = true;
+> = false;
 
 float4 gColorDiffuse
 <
