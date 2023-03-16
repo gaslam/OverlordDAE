@@ -86,6 +86,18 @@ void UberMaterial::SetUseTextureNormal(bool value)
 	InitializeEffectVariables();
 }
 
+void UberMaterial::SetUseOpacityIntensity(bool value)
+{
+	m_UseTextureOpacityIntensity = value;
+	InitializeEffectVariables();
+}
+
+void UberMaterial::SetUseSpecularIntensity(bool value)
+{
+	m_UseSpecularIntensity = value;
+	InitializeEffectVariables();
+}
+
 void UberMaterial::SetShininess(int value)
 {
 	Clamp<int>(value, 100, 0);
@@ -173,6 +185,32 @@ void UberMaterial::SetColorFresnel(XMFLOAT4& color)
 	InitializeEffectVariables();
 }
 
+void UberMaterial::SetTechniqueIdx(int idx)
+{
+	m_TechniqueIdx = idx;
+	InitializeEffectVariables();
+}
+
+std::unordered_map<int, const char*> UberMaterial::GetTechniqueDesciptions()
+{
+	std::unordered_map<int, const char*> descriptions{};
+	auto techniques = GetTechniques();
+	int idx{};
+	for (std::pair<size_t,MaterialTechniqueContext> pair : techniques)
+	{
+		if (pair.second.pTechnique)
+		{
+			D3DX11_TECHNIQUE_DESC desc;
+			pair.second.pTechnique->GetDesc(&desc);
+			const char* name = static_cast<const char*>(desc.Name);
+			descriptions.emplace(std::pair<int, const char*>{static_cast<int>(idx), name});
+		}
+		++idx;
+	}
+
+	return descriptions;
+}
+
 void UberMaterial::InitializeEffectVariables()
 {
 	if (m_pDiffuseTexture)
@@ -213,6 +251,7 @@ void UberMaterial::InitializeEffectVariables()
 	SetVariable_Scalar(L"gTextureOpacityIntensity", m_UseTextureOpacityIntensity);
 	SetVariable_Scalar(L"gUseSpecularBlinn", m_UseSpecularBlinn);
 	SetVariable_Scalar(L"gUseSpecularPhong", m_UseSpecularPhong);
+	SetVariable_Scalar(L"gUseTextureSpecularIntensity", m_UseSpecularIntensity);
 	SetVariable_Scalar(L"gFresnelPower", m_FresnelPower);
 	SetVariable_Scalar(L"gFresnelMultiplier", m_FresnelMultiplier);
 	SetVariable_Scalar(L"gFresnelHardness", m_FresnelHardness);
@@ -222,4 +261,5 @@ void UberMaterial::InitializeEffectVariables()
 	SetVariable_Vector(L"gColorSpecular", m_ColorSpecular);
 	SetVariable_Vector(L"gColorAmbient", m_ColorAmbient);
 	SetVariable_Vector(L"gColorFresnel", m_ColorFresnel);
+	SetTechnique(m_TechniqueIdx);
 }

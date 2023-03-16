@@ -1,4 +1,5 @@
 #pragma once
+#include <unordered_map>
 class UberMaterial final :
     public Material<UberMaterial>
 {
@@ -9,14 +10,14 @@ public:
     UberMaterial(const UberMaterial& other) = delete;
     UberMaterial(UberMaterial&& other) noexcept = delete;
     UberMaterial& operator=(const UberMaterial& other) = delete;
-    UberMaterial& operator=(UberMaterial&& other) noexcept = delete;
+    UberMaterial& operator=(UberMaterial&& other) noexcept = delete;;
 
+#pragma region SetterFunctions
     void SetDiffuseTexture(const std::wstring& assetFile);
     void SetSpecularLevelTexture(const std::wstring& assetFile);
     void SetNormalTexture(const std::wstring& assetFile);
     void SetEnvironmentMapTexture(const std::wstring& assetFile);
     void SetOpacityMapTexture(const std::wstring& assetFile);
-
     void SetUseDiffuseTexture(bool value);
     void SetFlipGreenChannel(bool value);
     void SetUseFresnelFalloff(bool value);
@@ -25,6 +26,8 @@ public:
     void SetUseTextureNormal(bool value);
     void SetUseSpecularBlinn(bool value);
     void SetUseSpecularPhong(bool value);
+    void SetUseOpacityIntensity(bool value);
+    void SetUseSpecularIntensity(bool value);
     void SetShininess(int value);
     void SetAmbientIntensity(float value);
     void SetReflectionStrength(float value);
@@ -38,6 +41,20 @@ public:
     void SetColorSpecular(XMFLOAT4& color);
     void SetColorAmbient(XMFLOAT4& color);
     void SetColorFresnel(XMFLOAT4& color);
+    void SetTechniqueIdx(int idx);
+#pragma endregion SetterFunctions
+
+
+#pragma region GetterFunctions
+    bool GetUseTextureDiffuse() const { return m_UseDiffuseTexture; }
+    bool GetUseOpacityIntensity() const { return m_UseTextureOpacityIntensity; }
+    bool GetUseSpecularIntensity() const { return m_UseSpecularIntensity; }
+    int GetShininess() const { return m_Shininess; }
+    float GetOpacityIntensity() const { return m_OpacityIntensity; }
+    XMFLOAT4 GetDiffuseColor() const { return m_ColorDiffuse; }
+    XMFLOAT4 GetSpecularColor() const { return m_ColorSpecular; }
+    std::unordered_map<int, const char*> GetTechniqueDesciptions();
+#pragma endregion GetterFunctions
 
 protected:
     void InitializeEffectVariables() override;
@@ -50,8 +67,10 @@ private:
     bool m_UseTextureOpacityIntensity{ false };
     bool m_UseSpecularBlinn{ false };
     bool m_UseSpecularPhong{ false };
+    bool m_UseSpecularIntensity{ false };
 
     int m_Shininess{ 0 };
+    int m_TechniqueIdx{};
     float m_AmbientIntensity{ 0.f };
     float m_ReflectionStrength{ 0.f };
     float m_RefractionStrength{ 0.f };
