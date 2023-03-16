@@ -20,5 +20,9 @@ protected:
 
 private:
 	GameObject* m_pSphere{ nullptr };
+	bool m_MaterialPopupWindowOpwn{ false };
+	int m_SelectedTechnique{};
+
+	UINT m_UberMatId{};
 };
 
