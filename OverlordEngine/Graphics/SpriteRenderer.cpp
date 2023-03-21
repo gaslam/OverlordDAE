@@ -44,10 +44,8 @@ SpriteRenderer::~SpriteRenderer()
 	m_Textures.clear();
 }
 
-void SpriteRenderer::UpdateBuffer(const SceneContext& /*sceneContext*/)
+void SpriteRenderer::UpdateBuffer(const SceneContext& sceneContext)
 {
-	TODO_W4(L"Complete UpdateBuffer")
-
 	if (!m_pVertexBuffer || m_Sprites.size() > m_BufferSize)
 	{
 		// if the vertex buffer does not exists, or the number of sprites is bigger then the buffer size
@@ -57,7 +55,20 @@ void SpriteRenderer::UpdateBuffer(const SceneContext& /*sceneContext*/)
 		//		and set the cpu access flags to access_write
 		//
 		//		Finally create the buffer (sceneContext.d3dContext.pDevice). Be sure to log the HResult! (HANDLE_ERROR)
+		D3D11_BUFFER_DESC bufferDesc;
+		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		m_pVertexBuffer->Release();
+		m_BufferSize = static_cast<UINT>(m_Sprites.size());
+		D3D11_SUBRESOURCE_DATA initData{};
+		initData.pSysMem = m_Sprites.data();
+		HRESULT result = sceneContext.d3dContext.pDevice->CreateBuffer(&bufferDesc,&initData, &m_pVertexBuffer);
 
+		if (FAILED(result))
+		{
+			HANDLE_ERROR(result);
+			return;
+		}
 
 		ASSERT_NULL_(m_pVertexBuffer);
 	}
@@ -90,6 +101,10 @@ void SpriteRenderer::UpdateBuffer(const SceneContext& /*sceneContext*/)
 		// Next you will need to use the device context to map the vertex buffer to the mapped resource
 		// use memcpy to copy all our sprite vertices (m_Sprites) to the mapped resource (D3D11_MAPPED_SUBRESOURCE::pData)
 		// unmap the vertex buffer
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		sceneContext.d3dContext.pDeviceContext->Map(m_pVertexBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource);
+		memcpy(mappedResource.pData,&m_Sprites, sizeof(VertexSprite));
+		sceneContext.d3dContext.pDeviceContext->Unmap(m_pVertexBuffer, 0);
 	}
 }
 

@@ -18,15 +18,24 @@ void SpriteComponent::SetTexture(const std::wstring& spriteAsset)
 	m_pTexture = ContentManager::Load<TextureData>(m_SpriteAsset);
 }
 
-void SpriteComponent::Draw(const SceneContext& /*sceneContext*/)
+void SpriteComponent::Draw(const SceneContext& sceneContext)
 {
 	if (!m_pTexture)
 		return;
 
 	TODO_W4(L"Draw the sprite with SpriteRenderer::Draw")
 
-	//Here you need to draw the SpriteComponent using the Draw of the sprite renderer
-	// The sprite renderer is a singleton
-	// you will need to position (X&Y should be in screenspace, Z contains the depth between [0,1]), the rotation and the scale from the owning GameObject
-	// You can use the MathHelper::QuaternionToEuler function to help you with the z rotation 
+		//Here you need to draw the SpriteComponent using the Draw of the sprite renderer
+		// The sprite renderer is a singleton
+		// you will need to position (X&Y should be in screenspace, Z contains the depth between [0,1]), the rotation and the scale from the owning GameObject
+		// You can use the MathHelper::QuaternionToEuler function to help you with the z rotation 
+		auto pTransform = m_pGameObject->GetComponent<TransformComponent>();
+		auto position = pTransform->GetWorldPosition();
+		XMFLOAT4 posScreenSpace;
+		posScreenSpace.x = position.x;
+		posScreenSpace.y = position.y;
+		posScreenSpace.z = pTransform->GetPosition().z;
+		posScreenSpace.w = 1.f;
+		auto newPos = MathHelper::QuaternionToEuler(posScreenSpace);
+		SpriteRenderer::Get()->DrawImmediate(sceneContext.d3dContext, m_pTexture->GetShaderResourceView(), { posScreenSpace.x,posScreenSpace.y }, m_Color, m_Pivot, { pTransform->GetScale().x,pTransform->GetScale().y },newPos.z);
 }

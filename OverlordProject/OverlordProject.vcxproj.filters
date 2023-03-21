@@ -15,6 +15,9 @@
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
     <ClCompile Include="Materials\UberMaterial.cpp" />
     <ClCompile Include="Scenes\Week 4\UberMaterialScene.cpp" />
+    <ClCompile Include="Scenes\Week 4\SpriteTestScene.cpp" />
+    <ClCompile Include="Scenes\Week 4\SpikeTestScene.cpp" />
+    <ClCompile Include="Materials\SpikeMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -30,5 +33,8 @@
     <ClInclude Include="Materials\DiffuseMaterial.h" />
     <ClInclude Include="Materials\UberMaterial.h" />
     <ClInclude Include="Scenes\Week 4\UberMaterialScene.h" />
+    <ClInclude Include="Scenes\Week 4\SpriteTestScene.h" />
+    <ClInclude Include="Scenes\Week 4\SpikeTestScene.h" />
+    <ClInclude Include="Materials\SpikeMaterial.h" />
   </ItemGroup>
 </Project>

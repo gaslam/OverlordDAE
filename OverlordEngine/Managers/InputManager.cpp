@@ -320,6 +320,7 @@ XMFLOAT2 InputManager::GetThumbstickPosition(bool leftThumbstick, GamepadIndex p
 
 		if (pos.x > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE && pos.x < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)pos.x = 0;
 		if (pos.y > -XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE && pos.y < XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)pos.y = 0;
+		pos.y = -pos.y;
 	}
 
 	if (pos.x < 0)pos.x /= 32768;
@@ -327,6 +328,7 @@ XMFLOAT2 InputManager::GetThumbstickPosition(bool leftThumbstick, GamepadIndex p
 
 	if (pos.y < 0)pos.y /= 32768;
 	else pos.y /= 32767;
+
 
 	return pos;
 }
