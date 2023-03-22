@@ -18,6 +18,8 @@
     <ClCompile Include="Scenes\Week 4\SpriteTestScene.cpp" />
     <ClCompile Include="Scenes\Week 4\SpikeTestScene.cpp" />
     <ClCompile Include="Materials\SpikeMaterial.cpp" />
+    <ClCompile Include="Prefabs\BoneObject.cpp" />
+    <ClCompile Include="Scenes\Week 5\SoftwareSkinningScene_1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -36,5 +38,7 @@
     <ClInclude Include="Scenes\Week 4\SpriteTestScene.h" />
     <ClInclude Include="Scenes\Week 4\SpikeTestScene.h" />
     <ClInclude Include="Materials\SpikeMaterial.h" />
+    <ClInclude Include="Prefabs\BoneObject.h" />
+    <ClInclude Include="Scenes\Week 5\SoftwareSkinningScene_1.h" />
   </ItemGroup>
 </Project>

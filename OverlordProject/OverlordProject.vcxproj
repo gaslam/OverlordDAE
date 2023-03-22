@@ -93,6 +93,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Prefabs\BoneObject.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
     <ClCompile Include="Scenes\Week 4\ModelTestScene.cpp" />
     <ClCompile Include="Scenes\Week 3\ComponentTestScene.cpp" />
@@ -104,6 +105,7 @@
     <ClCompile Include="Scenes\Week 4\SpriteTestScene.cpp" />
     <ClCompile Include="Scenes\Week 4\SpikeTestScene.cpp" />
     <ClCompile Include="Materials\SpikeMaterial.cpp" />
+    <ClCompile Include="Scenes\Week 5\SoftwareSkinningScene_1.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
@@ -129,6 +131,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Prefabs\BoneObject.h" />
     <ClInclude Include="Materials\DiffuseMaterial.h" />
     <ClInclude Include="Scenes\Week 4\ModelTestScene.h" />
     <ClInclude Include="Scenes\Week 3\ComponentTestScene.h" />
@@ -140,6 +143,7 @@
     <ClInclude Include="Scenes\Week 4\SpriteTestScene.h" />
     <ClInclude Include="Scenes\Week 4\SpikeTestScene.h" />
     <ClInclude Include="Materials\SpikeMaterial.h" />
+    <ClInclude Include="Scenes\Week 5\SoftwareSkinningScene_1.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Scenes\Week 3\W3_PongScene.h" />
