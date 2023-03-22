@@ -17,6 +17,22 @@ void BoneObject::AddBone(BoneObject* pObject)
 	AddChild(pObject);
 }
 
+void BoneObject::CalculateBindPos()
+{
+	const auto boneWorld = XMLoadFloat4x4(&GetTransform()->GetWorld());
+	const XMMATRIX invWorldMatrix = XMMatrixInverse(nullptr, boneWorld);
+	XMStoreFloat4x4(&m_BindPos, invWorldMatrix);
+
+	auto children = GetChildren<BoneObject>();
+	for (BoneObject* child : children)
+	{
+		if (child)
+		{
+			child->CalculateBindPos();
+		}
+	}
+}
+
 void BoneObject::Initialize(const SceneContext&)
 {
 	GameObject* pEmpty = new GameObject{};
