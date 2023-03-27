@@ -97,6 +97,9 @@ void SoftwareSkinningScene_2::OnSceneDeactivated()
 {
 	std::fill_n(m_BoneRotations.begin(),m_BoneRotations.size(), XMFLOAT4{});
 	m_BoneRotation = 0.f;
+	const auto pFreeCamera = m_SceneContext.pCamera;
+	pFreeCamera->GetTransform()->Rotate(30, 0, 0, false);
+	pFreeCamera->GetTransform()->Translate(0, 50, -80);
 }
 
 void SoftwareSkinningScene_2::RotateBones()
