@@ -42,6 +42,7 @@ public:
 	bool IsDirty() const { return m_IsDirty; }
 	void SetRigidBodyComponent(RigidBodyComponent* pRigidBody) { m_pRigidBodyComponent = pRigidBody; }
 	void SetControllerComponent(ControllerComponent* pController) { m_pControllerComponent = pController; }
+	void SetForward(XMFLOAT3& forward) { m_Forward = forward; }
 
 protected:
 

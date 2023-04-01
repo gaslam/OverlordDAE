@@ -55,6 +55,8 @@
     <ClCompile Include="Graphics\ShadowMapRenderer.cpp" />
     <ClCompile Include="Components\ParticleEmitterComponent.cpp" />
     <ClCompile Include="StaticCamera.cpp" />
+    <ClCompile Include="Prefabs\ThirdPersonCamera.cpp" />
+    <ClCompile Include="Components\CharacterComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -121,5 +123,7 @@
     <ClInclude Include="Graphics\ShadowMapRenderer.h" />
     <ClInclude Include="Components\ParticleEmitterComponent.h" />
     <ClInclude Include="StaticCamera.h" />
+    <ClInclude Include="Prefabs\ThirdPersonCamera.h" />
+    <ClInclude Include="Components\CharacterComponent.h" />
   </ItemGroup>
 </Project>

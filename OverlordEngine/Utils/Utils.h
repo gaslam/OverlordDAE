@@ -1,6 +1,7 @@
 #pragma once
 #include "PhysX/PhysxProxy.h"
 #include "Scenegraph/GameScene.h"
+#include "Components/ModelComponent.h"
 
 namespace GameSceneExt
 {
@@ -65,6 +66,22 @@ namespace ConvertUtil
 	inline float* ToImFloatPtr(const XMFLOAT4& v)
 	{
 		return reinterpret_cast<float*>(const_cast<XMFLOAT4*>(&v));
+	}
+}
+
+namespace ModelUtil
+{
+	template <typename T>
+	std::enable_if<std::is_base_of_v<BaseMaterial,T>,ModelComponent>::type*
+	CreateModelWithTexturesAndMaterials(std::vector<T*>& pMaterials,std::wstring& filePathModel,std::wstring& filePathTextures,std::wstring* textures,const UINT8 texturesSize)
+	{
+		ModelComponent* pModel = new ModelComponent(filePathModel);
+		for (UINT8 i{}; i < texturesSize; ++i)
+		{
+			pMaterials[i]->SetDiffuseTexture(filePathTextures + textures[i]);
+			pModel->SetMaterial(pMaterials[i], i);
+		}
+		return pModel;
 	}
 }
 
