@@ -38,5 +38,7 @@ private:
 
     void HandleButtons(float deltaTime, float& targetAngle, InputManager* pInput, TransformComponent* pCharacterTransform, bool& pressed);
     void HandleMovement(const SceneContext& sceneContext, float deltaTime);
+    void HandleRotation(float deltaTime, float& targetAngle, TransformComponent* pCharacterTransform, bool& isMoving);
+    void ChangeState(CharacterState& state);
 };
 

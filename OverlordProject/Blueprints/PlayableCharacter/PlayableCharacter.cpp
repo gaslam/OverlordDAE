@@ -117,6 +117,7 @@ void PlayableCharacter::HandleButtons(float deltaTime, float& targetAngle, Input
 
 void PlayableCharacter::HandleMovement(const SceneContext& sceneContext, float deltaTime)
 {
+	auto runState = CharacterState::Running;
 	InputManager* pInput = sceneContext.pInput;
 	auto pCameraComponent = m_pCamera->GetComponent<CameraComponent>();
 
@@ -129,10 +130,76 @@ void PlayableCharacter::HandleMovement(const SceneContext& sceneContext, float d
 	bool isCharacterMoving = false;
 	auto pTransform = GetComponent<CharacterComponent>()->GetTransform();
 	HandleButtons(deltaTime, m_TargetFowardRotationYaw, pInput,pTransform, isCharacterMoving);
+	if (!isCharacterMoving)
+	{
+		HandleRotation(deltaTime, m_TargetFowardRotationYaw, pTransform, isCharacterMoving);
+	}
+
+	if (!isCharacterMoving)
+	{
+		auto idleState = CharacterState::Idle;
+		ChangeState(idleState);
+	}
+
 	if (m_TargetFowardRotationYaw != m_TotalYaw && isCharacterMoving)
 	{
 		float angleToAdd{ m_TargetFowardRotationYaw > m_TotalYaw ? deltaTime * m_AngularSpeed : -deltaTime * m_AngularSpeed };
 		m_TotalYaw += angleToAdd;
+		ChangeState(runState);
 	}
 	pTransform->Rotate(0.f, m_TotalYaw, 0.f);
+}
+
+void PlayableCharacter::HandleRotation(float deltaTime, float& targetAngle, TransformComponent* pCharacterTransform, bool& isMoving)
+{
+	auto runState = CharacterState::Running;
+	auto dir = InputManager::GetThumbstickPosition();
+	const bool isThumbStickUsed{ dir.x != 0.f || dir.y != 0.f };
+	if (!isThumbStickUsed)
+	{
+		isMoving = false;
+		return;
+	}
+
+	auto pCamTransform = m_pCamera->GetTransform();
+	if (!pCamTransform)
+	{
+		isMoving = false;
+		return;
+	}
+
+	XMVECTOR thumbStickDirVec = XMLoadFloat2(&dir);
+	XMVECTOR zeroVector{};
+
+	float angleToSubtract =90.f - ((atan2f(dir.y, dir.x) * 180.f)/ 3.14159265358979323846f);
+	targetAngle -= angleToSubtract;
+	isMoving = true;
+
+	auto pos = XMLoadFloat3(&pCharacterTransform->GetPosition());
+	auto forward = pCamTransform->GetForward();
+	forward.y = 0.f;
+	auto forwardVec = XMLoadFloat3(&forward);
+	auto right = pCamTransform->GetRight();
+	right.y = 0.f;
+	auto rightVec = XMLoadFloat3(&right);
+
+	pos += forwardVec * dir.y * m_CharacterSpeed * deltaTime;
+	pos += rightVec * dir.x * m_CharacterSpeed * deltaTime;
+
+	pCharacterTransform->GetTransform()->Translate(pos);
+	ChangeState(runState);
+}
+
+void PlayableCharacter::ChangeState(CharacterState& state)
+{
+	auto pCharacterComp = GetComponent<CharacterComponent>();
+	if (pCharacterComp && m_State != state)
+	{
+		m_State = state;
+		auto pAnimator = pCharacterComp->GetAnimator();
+		if (pAnimator)
+		{
+			pAnimator->SetAnimation(m_State);
+		}
+	}
 }
