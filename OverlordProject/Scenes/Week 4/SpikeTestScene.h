@@ -16,6 +16,7 @@ protected:
 	void Initialize() override;
 	void Update() override;
 	void OnGUI() override;
+	void OnSceneActivated() override;
 private:
 	SpikeMaterial* m_pSpikeMat{ nullptr };
 	float m_RotationSpeedY{ 20.f };
@@ -23,5 +24,9 @@ private:
 	float m_DegreesTurned{};
 	GameObject* m_pSphere{ nullptr };
 	XMFLOAT4 m_Color{ XMFLOAT4{Colors::Red} };
+	void LoadScene();
+	enum Inputs : int {
+		reset
+	};
 };
 

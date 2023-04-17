@@ -17,6 +17,8 @@ protected:
 	void Update() override;
 	void Draw() override;
 	void OnGUI() override;
+	void LoadScene();
+	void OnSceneActivated() override;
 
 private:
 	GameObject* m_pSphere{ nullptr };
@@ -24,5 +26,8 @@ private:
 	int m_SelectedTechnique{};
 
 	UINT m_UberMatId{};
+	enum Inputs : int {
+		reset
+	};
 };
 

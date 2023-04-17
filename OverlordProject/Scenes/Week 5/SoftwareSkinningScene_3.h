@@ -17,7 +17,7 @@ protected:
 	void Initialize() override;
 	void Update() override;
 	void OnGUI() override;
-	void OnSceneDeactivated() override;
+	void OnSceneActivated() override;
 
 private:
 	std::vector<BoneObject*> m_pBones{};
@@ -44,11 +44,14 @@ private:
 		VertexPosNormCol transformedVertex{};
 		VertexPosNormCol originalVertex{};
 	};
-
-	void CalculateBoneSectionVerts(BoneObject* pBone1, BoneObject* pBone2, size_t startIdx = 0);
 	void InitializeVertices(float length);
 
 	MeshDrawComponent* m_pMeshDrawer{};
 	std::vector<VertexSoftwareSkinned> m_SkinnedVertices{};
+
+	void LoadScene();
+	enum Inputs : int {
+		reset
+	};
 };
 

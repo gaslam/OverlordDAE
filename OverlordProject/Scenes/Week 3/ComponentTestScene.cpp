@@ -25,7 +25,6 @@ void ComponentTestScene::Initialize()
 	m_pRedSphere = new SpherePrefab(1, 10, XMFLOAT4{ Colors::Red });
 
 	AddChild(m_pRedSphere);
-	m_pRedSphere->GetTransform()->Translate(0.05f, 30.f, 0);
 	auto pRigidBody = m_pRedSphere->AddComponent(new RigidBodyComponent());
 	pRigidBody->AddCollider(PxSphereGeometry{ 1.f },*pBouncyMaterial);
 	pRigidBody->SetCollisionGroup(CollisionGroup::Group0);
@@ -51,11 +50,12 @@ void ComponentTestScene::Initialize()
 	pRigidBody->SetCollisionGroup(CollisionGroup::Group2);
 	pRigidBody->AddForce({ 0,-100,0 }, PxForceMode::eIMPULSE);
 
+	m_SceneContext.pInput->AddInputAction(InputAction{ Inputs::reset,InputState::pressed,'R' });
+
 }
 
 void ComponentTestScene::Update()
 {
-	//Optional
 }
 
 void ComponentTestScene::Draw()

@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "ThirdPersonCamera.h"
+#include "Misc/MeshFilter.h"
 
-ThirdPersonCamera::ThirdPersonCamera(TransformComponent* pComponent, float distance) : m_pComponent{ pComponent }, m_Distance{ distance } {
+ThirdPersonCamera::ThirdPersonCamera(TransformComponent* pComponent, float distance) : m_pComponent{ pComponent }, m_Distance{distance} {
 
 };
 
@@ -40,9 +41,19 @@ void ThirdPersonCamera::Update(const SceneContext& sceneContext)
 			m_TotalPitch = m_MinAngle;
 		}
 
-		const auto backward = -(XMLoadFloat3(&GetTransform()->GetForward()) * m_Distance);
-		auto currPos = XMLoadFloat3(&m_pComponent->GetTransform()->GetPosition()) + backward;
+		if (m_TotalYaw >= 360.f)
+		{
+			m_TotalYaw = 0.f;
+		}
+		auto backwards = -(XMLoadFloat3(&GetTransform()->GetForward()) * m_Distance);
+		auto currPos = XMLoadFloat3(&m_pComponent->GetTransform()->GetPosition()) + backwards;
+		auto viewMatrix = XMLoadFloat4x4(&m_pCamera->GetView());
+		auto projectionMatrix = XMLoadFloat4x4(&m_pCamera->GetProjection());
 		GetTransform()->Translate(currPos);
 		GetTransform()->Rotate(m_TotalPitch, m_TotalYaw, 0.f);
 	}
+}
+
+void ThirdPersonCamera::Intersect(MeshFilter*)
+{
 }

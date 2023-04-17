@@ -1,4 +1,5 @@
 #pragma once
+class PlayableCharacter;
 class BanjoTestScene :
     public GameScene
 {
@@ -13,5 +14,7 @@ public:
 protected:
 	void Initialize() override;
 	void OnGUI() override;
+private:
+	PlayableCharacter* m_pPlayableCharacter{ nullptr };
 };
 

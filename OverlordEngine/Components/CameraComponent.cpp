@@ -66,5 +66,7 @@ void CameraComponent::SetActive(bool active)
 GameObject* CameraComponent::Pick(CollisionGroup /*ignoreGroups*/) const
 {
 	TODO_W7(L"Implement Picking Logic")
+
+	
 	return nullptr;
 }

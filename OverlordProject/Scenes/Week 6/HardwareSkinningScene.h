@@ -12,6 +12,8 @@ public:
 protected:
 	void Initialize() override;
 	void OnGUI() override;
+	void OnSceneActivated() override;
+	void Update() override;
 
 private:
 	ModelAnimator* pAnimator{};
@@ -21,5 +23,10 @@ private:
 
 	char** m_ClipNames{};
 	UINT m_ClipCount{};
+
+	void LoadScene();
+	enum Inputs : int {
+		reset
+	};
 };
 

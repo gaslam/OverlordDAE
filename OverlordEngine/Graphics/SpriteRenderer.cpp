@@ -55,11 +55,11 @@ void SpriteRenderer::UpdateBuffer(const SceneContext& sceneContext)
 		//		and set the cpu access flags to access_write
 		//
 		//		Finally create the buffer (sceneContext.d3dContext.pDevice). Be sure to log the HResult! (HANDLE_ERROR)
+		m_pVertexBuffer->Release();
+		if(m_Sprites.size() != m_BufferSize)m_BufferSize = static_cast<UINT>(m_Sprites.size());
 		D3D11_BUFFER_DESC bufferDesc;
 		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		m_pVertexBuffer->Release();
-		m_BufferSize = static_cast<UINT>(m_Sprites.size());
 		D3D11_SUBRESOURCE_DATA initData{};
 		initData.pSysMem = m_Sprites.data();
 		HRESULT result = sceneContext.d3dContext.pDevice->CreateBuffer(&bufferDesc,&initData, &m_pVertexBuffer);

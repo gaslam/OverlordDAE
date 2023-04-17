@@ -69,7 +69,7 @@ namespace ConvertUtil
 	}
 }
 
-namespace ModelUtil
+namespace ModelUtils
 {
 	template <typename T>
 	std::enable_if<std::is_base_of_v<BaseMaterial,T>,ModelComponent>::type*

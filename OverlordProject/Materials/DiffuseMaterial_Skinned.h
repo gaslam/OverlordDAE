@@ -10,7 +10,7 @@ public:
 	DiffuseMaterial_Skinned& operator=(const DiffuseMaterial_Skinned& other) = delete;
 	DiffuseMaterial_Skinned& operator=(DiffuseMaterial_Skinned&& other) noexcept = delete;
 
-	void SetDiffuseTexture(const std::wstring& assetFile);
+	void SetDiffuseTexture(const std::wstring& assetFile) override;
 
 protected:
 	void InitializeEffectVariables() override;

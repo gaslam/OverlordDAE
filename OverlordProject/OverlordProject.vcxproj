@@ -94,15 +94,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Blueprints\PlayableCharacter\PlayableCharacter.cpp" />
-    <ClCompile Include="Scenes\Milestone\BanjoTestScene.cpp" />
-    <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
     <ClCompile Include="Prefabs\BoneObject.cpp" />
-    <ClCompile Include="Materials\DiffuseMaterial.cpp" />
-    <ClCompile Include="Scenes\Week 4\ModelTestScene.cpp" />
-    <ClCompile Include="Scenes\Week 3\ComponentTestScene.cpp" />
     <ClCompile Include="Prefabs\CubePrefab.cpp" />
     <ClCompile Include="Prefabs\SpherePrefab.cpp" />
     <ClCompile Include="Prefabs\TorusPrefab.cpp" />
+    <ClCompile Include="Scenes\Milestone\BanjoTestScene.cpp" />
+    <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
+    <ClCompile Include="Materials\DiffuseMaterial.cpp" />
+    <ClCompile Include="Scenes\Week 4\ModelTestScene.cpp" />
+    <ClCompile Include="Scenes\Week 3\ComponentTestScene.cpp" />
     <ClCompile Include="Materials\ColorMaterial.cpp" />
     <ClCompile Include="Scenes\Week 3\MinionScene.cpp" />
     <ClCompile Include="Scenes\Week 4\SpriteTestScene.cpp" />
@@ -138,15 +138,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blueprints\PlayableCharacter\PlayableCharacter.h" />
-    <ClInclude Include="Scenes\Milestone\BanjoTestScene.h" />
-    <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
     <ClInclude Include="Prefabs\BoneObject.h" />
-    <ClInclude Include="Materials\DiffuseMaterial.h" />
-    <ClInclude Include="Scenes\Week 4\ModelTestScene.h" />
-    <ClInclude Include="Scenes\Week 3\ComponentTestScene.h" />
     <ClInclude Include="Prefabs\CubePrefab.h" />
     <ClInclude Include="Prefabs\SpherePrefab.h" />
     <ClInclude Include="Prefabs\TorusPrefab.h" />
+    <ClInclude Include="ProjectUtils.h" />
+    <ClInclude Include="Scenes\Milestone\BanjoTestScene.h" />
+    <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
+    <ClInclude Include="Materials\DiffuseMaterial.h" />
+    <ClInclude Include="Scenes\Week 4\ModelTestScene.h" />
+    <ClInclude Include="Scenes\Week 3\ComponentTestScene.h" />
     <ClInclude Include="Materials\ColorMaterial.h" />
     <ClInclude Include="Scenes\Week 3\MinionScene.h" />
     <ClInclude Include="Scenes\Week 4\SpriteTestScene.h" />

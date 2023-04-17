@@ -107,6 +107,8 @@ public:
 		InitializeEffectVariables();
 	}
 
+	virtual void SetDiffuseTexture(const std::wstring&) {};
+
 protected:
 	const std::map<size_t, UINT>& GetVariableIndexLUT() const override { return m_VariableIndexLUT; }
 	int GetRootVariableIndex(eRootVariable rootVariable) const override { return m_RootVariableIndexLUT[static_cast<size_t>(rootVariable)]; }

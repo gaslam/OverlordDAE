@@ -21,6 +21,9 @@ public:
 	ModelAnimator* GetAnimator() const { return m_pAnimator; }
 	bool HasAnimator() const { return m_pAnimator != nullptr; }
 
+	MeshFilter* GetMeshFilter() const { return m_pMeshFilter; }
+	bool HasMeshFilter() const { return m_pMeshFilter != nullptr; }
+
 protected:
 	void Initialize(const SceneContext& sceneContext) override;
 	void Update(const SceneContext&) override;

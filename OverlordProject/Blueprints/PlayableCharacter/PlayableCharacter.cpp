@@ -3,21 +3,14 @@
 #include "Components/CharacterComponent.h"
 #include <Materials/DiffuseMaterial_Skinned.h>
 #include "Prefabs/ThirdPersonCamera.h"
+#include "ProjectUtils.h"
 
 
 PlayableCharacter::PlayableCharacter()
 {
-	const UINT8 totalMaterials{ 6 };
-	std::wstring characterTextures[totalMaterials]{ L"banjo_feet.png",L"banjo_belt.png",L"banjo_nose.png",L"banjo_eyes.png",L"banjo_backpack.png",L"banjo_color.png" };
-	std::wstring modelPath{ L"Meshes/Characters/Banjo/banjo.ovm" };
-	std::wstring texturePath{ L"Textures/" };
-	std::vector<DiffuseMaterial_Skinned*> materials{};
-	materials.resize(totalMaterials);
-	for (auto& material : materials)
-	{
-		material = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
-	}
-	m_pModelComponent = ModelUtil::CreateModelWithTexturesAndMaterials(materials, modelPath, texturePath, characterTextures, totalMaterials);
+	std::wstring fileExtension{ L"png" };
+
+	m_pModelComponent = new ModelComponent{ L"Meshes/Characters/Banjo/banjo.ovm" };
 }
 
 void PlayableCharacter::SetAnimator(ModelAnimator* pAnimator)
@@ -42,7 +35,7 @@ void PlayableCharacter::Initialize(const SceneContext& sceneContext)
 	sceneContext.pInput->AddInputAction(actionMoveLeft);
 	sceneContext.pInput->AddInputAction(actionMoveRight);
 	m_pCamera = new ThirdPersonCamera(GetTransform(), 20.f);
-	m_TotalYaw = m_pCamera->GetYaw();
+	m_TotalYaw = m_pCamera->GetYaw() - 180.f;
 }
 
 void PlayableCharacter::Update(const SceneContext& sceneContext)
@@ -51,7 +44,7 @@ void PlayableCharacter::Update(const SceneContext& sceneContext)
 	HandleMovement(sceneContext, deltaTime);
 }
 
-void PlayableCharacter::HandleButtons(float deltaTime, float& targetAngle, InputManager* pInput, TransformComponent* pCharacterTransform, bool& pressed)
+void PlayableCharacter::HandleButtons(float deltaTime, float& targetAngle, InputManager* pInput, TransformComponent*, bool& pressed)
 {
 	bool isCharacterMoving{ false };
 	bool isMovingBackwards{ false };
@@ -84,14 +77,14 @@ void PlayableCharacter::HandleButtons(float deltaTime, float& targetAngle, Input
 	if (pInput->IsActionTriggered(Actions::moveLeft))
 	{
 		dir.y = -1.f;
-		targetAngle -= AngleToAdd;
+		targetAngle -= isMovingBackwards ? -AngleToAdd : AngleToAdd;
 		isCharacterMoving = true;
 	}
 
 	if (pInput->IsActionTriggered(Actions::moveRight))
 	{
 		dir.y = 1.f;
-		targetAngle += AngleToAdd;
+		targetAngle += isMovingBackwards ? -AngleToAdd : AngleToAdd;
 		isCharacterMoving = true;
 	}
 	pressed = isCharacterMoving;
@@ -101,23 +94,31 @@ void PlayableCharacter::HandleButtons(float deltaTime, float& targetAngle, Input
 		return;
 	}
 
-	auto pos = XMLoadFloat3(&pCharacterTransform->GetPosition());
+	auto pos = XMVECTOR{};
 	auto forward = pCamTransform->GetForward();
-	forward.y = 0.f;
 	auto forwardVec = XMLoadFloat3(&forward);
 	auto right = pCamTransform->GetRight();
-	right.y = 0.f;
 	auto rightVec = XMLoadFloat3(&right);
 
-	pos += forwardVec * dir.x * m_CharacterSpeed * deltaTime;
-	pos += rightVec * dir.y * m_CharacterSpeed * deltaTime;
+	pos += forwardVec * dir.x  *10000 * deltaTime;
+	pos += rightVec * dir.y * 10000 * deltaTime;
 
-	pCharacterTransform->GetTransform()->Translate(pos);
+	auto component = GetComponent<RigidBodyComponent>();
+	XMFLOAT3 posFl;
+	XMStoreFloat3(&posFl, pos);
+	component->AddForce(posFl);
+
+	if (m_TargetFowardRotationYaw != m_TotalYaw && isCharacterMoving)
+	{
+		auto runState = CharacterState::Running;
+		float angleToAdd{ m_TargetFowardRotationYaw > m_TotalYaw ? deltaTime * m_AngularSpeed : -deltaTime * m_AngularSpeed };
+		m_TotalYaw += angleToAdd;
+		ChangeState(runState);
+	}
 }
 
 void PlayableCharacter::HandleMovement(const SceneContext& sceneContext, float deltaTime)
 {
-	auto runState = CharacterState::Running;
 	InputManager* pInput = sceneContext.pInput;
 	auto pCameraComponent = m_pCamera->GetComponent<CameraComponent>();
 
@@ -126,7 +127,7 @@ void PlayableCharacter::HandleMovement(const SceneContext& sceneContext, float d
 		return;
 	}
 
-	m_TargetFowardRotationYaw = m_pCamera->GetYaw();
+	m_TargetFowardRotationYaw = m_pCamera->GetYaw() - 180.f;
 	bool isCharacterMoving = false;
 	auto pTransform = GetComponent<CharacterComponent>()->GetTransform();
 	HandleButtons(deltaTime, m_TargetFowardRotationYaw, pInput,pTransform, isCharacterMoving);
@@ -140,17 +141,10 @@ void PlayableCharacter::HandleMovement(const SceneContext& sceneContext, float d
 		auto idleState = CharacterState::Idle;
 		ChangeState(idleState);
 	}
-
-	if (m_TargetFowardRotationYaw != m_TotalYaw && isCharacterMoving)
-	{
-		float angleToAdd{ m_TargetFowardRotationYaw > m_TotalYaw ? deltaTime * m_AngularSpeed : -deltaTime * m_AngularSpeed };
-		m_TotalYaw += angleToAdd;
-		ChangeState(runState);
-	}
 	pTransform->Rotate(0.f, m_TotalYaw, 0.f);
 }
 
-void PlayableCharacter::HandleRotation(float deltaTime, float& targetAngle, TransformComponent* pCharacterTransform, bool& isMoving)
+void PlayableCharacter::HandleRotation(float deltaTime, float& targetAngle, TransformComponent*, bool& isMoving)
 {
 	auto runState = CharacterState::Running;
 	auto dir = InputManager::GetThumbstickPosition();
@@ -172,10 +166,10 @@ void PlayableCharacter::HandleRotation(float deltaTime, float& targetAngle, Tran
 	XMVECTOR zeroVector{};
 
 	float angleToSubtract =90.f - ((atan2f(dir.y, dir.x) * 180.f)/ 3.14159265358979323846f);
-	targetAngle -= angleToSubtract;
+	targetAngle += angleToSubtract;
 	isMoving = true;
 
-	auto pos = XMLoadFloat3(&pCharacterTransform->GetPosition());
+	auto pos = XMVECTOR{};
 	auto forward = pCamTransform->GetForward();
 	forward.y = 0.f;
 	auto forwardVec = XMLoadFloat3(&forward);
@@ -186,8 +180,25 @@ void PlayableCharacter::HandleRotation(float deltaTime, float& targetAngle, Tran
 	pos += forwardVec * dir.y * m_CharacterSpeed * deltaTime;
 	pos += rightVec * dir.x * m_CharacterSpeed * deltaTime;
 
-	pCharacterTransform->GetTransform()->Translate(pos);
+	auto component = GetComponent<RigidBodyComponent>();
+	XMFLOAT3 posFl;
+	XMStoreFloat3(&posFl, pos);
+	component->AddForce(posFl);
+
 	ChangeState(runState);
+	if (m_TargetFowardRotationYaw != m_TotalYaw && isMoving)
+	{
+		if (m_TotalYaw > m_TargetFowardRotationYaw)
+		{
+			m_TotalYaw -= m_AngularSpeed * deltaTime;
+		}
+
+		if (m_TotalYaw <= m_TargetFowardRotationYaw)
+		{
+			m_TotalYaw += m_AngularSpeed * deltaTime;
+		}
+		ChangeState(runState);
+	}
 }
 
 void PlayableCharacter::ChangeState(CharacterState& state)

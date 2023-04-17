@@ -19,6 +19,9 @@ void W3_PongScene::Initialize()
 
 	const XMFLOAT4 blackColor{ 0.f,0.f,0.f,1.f };
 	m_SceneContext.settings.clearColor = blackColor;
+	m_SceneContext.settings.drawGrid = false;
+	m_SceneContext.settings.drawPhysXDebug = false;
+	m_SceneContext.settings.drawUserDebug = false;
 
 	InitSphere(pBouncyMaterial);
 	InitCubes(pBouncyMaterial);
@@ -43,24 +46,29 @@ void W3_PongScene::Update()
 
 	m_pRedSphere->GetTransform()->Translate(ballPos);
 
-	if (m_SceneContext.pInput->IsActionTriggered(MovementInputPlayerOne::p1Up))
+	if (m_SceneContext.pInput->IsActionTriggered(Input::p1Up))
 	{
 		MoveCube(m_pCubes[0], m_CubeSpeed * deltaTime);
 	}
 
-	if (m_SceneContext.pInput->IsActionTriggered(MovementInputPlayerOne::p1Down))
+	if (m_SceneContext.pInput->IsActionTriggered(Input::p1Down))
 	{
 		MoveCube(m_pCubes[0], -m_CubeSpeed * deltaTime);;
 	}
 
-	if (m_SceneContext.pInput->IsActionTriggered(MovementInputPlayerTwo::p2Up))
+	if (m_SceneContext.pInput->IsActionTriggered(Input::p2Up))
 	{
 		MoveCube(m_pCubes[1], m_CubeSpeed * deltaTime);
 	}
 
-	if (m_SceneContext.pInput->IsActionTriggered(MovementInputPlayerTwo::p2Down))
+	if (m_SceneContext.pInput->IsActionTriggered(Input::p2Down))
 	{
 		MoveCube(m_pCubes[1], -m_CubeSpeed * deltaTime);
+	}
+
+	if (m_SceneContext.pInput->IsActionTriggered(Input::reset))
+	{
+		LoadScene();
 	}
 }
 
@@ -104,7 +112,6 @@ void W3_PongScene::InitSphere(PxMaterial* mat)
 
 void W3_PongScene::InitCubes(PxMaterial* mat)
 {
-	XMFLOAT3 startPos{ -10.f,5.f,0.f };
 
 	for (int i{}; i < m_TotalCollObjsPerType; ++i)
 	{
@@ -115,10 +122,6 @@ void W3_PongScene::InitCubes(PxMaterial* mat)
 		auto colliderInfo = pRigidBody->GetCollider(colliderId);
 		colliderInfo.SetTrigger(true);
 	}
-
-	m_pCubes[0]->GetTransform()->Translate(startPos);
-	startPos.x = -startPos.x;
-	m_pCubes[1]->GetTransform()->Translate(startPos);
 
 	m_pCubes[0]->SetOnTriggerCallBack([=](GameObject* pTrigger, GameObject* pOther, PxTriggerAction action)
 		{
@@ -198,7 +201,7 @@ void W3_PongScene::InitWalls(PxMaterial* mat)
 		{
 			if (pTrigger == m_pWalls[0] && pOther == m_pRedSphere && action == PxTriggerAction::ENTER)
 			{
-				ResetBall();
+				LoadScene();
 			}
 		});
 
@@ -206,17 +209,18 @@ void W3_PongScene::InitWalls(PxMaterial* mat)
 		{
 			if (pTrigger == m_pWalls[1] && pOther == m_pRedSphere && action == PxTriggerAction::ENTER)
 			{
-				ResetBall();
+				LoadScene();
 			}
 		});
 }
 
 void W3_PongScene::AddInput()
 {
-	m_SceneContext.pInput->AddInputAction(InputAction{ MovementInputPlayerOne::p1Up,InputState::down,'W',-1,XINPUT_GAMEPAD_DPAD_UP,GamepadIndex::playerTwo });
-	m_SceneContext.pInput->AddInputAction(InputAction{ MovementInputPlayerOne::p1Down,InputState::down,'S',-1,XINPUT_GAMEPAD_DPAD_DOWN,GamepadIndex::playerTwo });
-	m_SceneContext.pInput->AddInputAction(InputAction{ MovementInputPlayerTwo::p2Up,InputState::down,VK_UP,-1,XINPUT_GAMEPAD_DPAD_UP,GamepadIndex::playerOne });
-	m_SceneContext.pInput->AddInputAction(InputAction{ MovementInputPlayerTwo::p2Down,InputState::down,VK_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN,GamepadIndex::playerOne });
+	m_SceneContext.pInput->AddInputAction(InputAction{ Input::p1Up,InputState::down,'W',-1,XINPUT_GAMEPAD_DPAD_UP,GamepadIndex::playerTwo });
+	m_SceneContext.pInput->AddInputAction(InputAction{ Input::p1Down,InputState::down,'S',-1,XINPUT_GAMEPAD_DPAD_DOWN,GamepadIndex::playerTwo });
+	m_SceneContext.pInput->AddInputAction(InputAction{ Input::p2Up,InputState::down,VK_UP,-1,XINPUT_GAMEPAD_DPAD_UP,GamepadIndex::playerOne });
+	m_SceneContext.pInput->AddInputAction(InputAction{ Input::p2Down,InputState::down,VK_DOWN,-1,XINPUT_GAMEPAD_DPAD_DOWN,GamepadIndex::playerOne });
+	m_SceneContext.pInput->AddInputAction(InputAction(Input::reset, InputState::pressed, 'R'));
 }
 
 void W3_PongScene::MoveCube(CubePrefab* prefab, float distance)
@@ -242,4 +246,19 @@ void W3_PongScene::MoveCube(CubePrefab* prefab, float distance)
 		cubePos.y = m_CubeMaxHeight - cubeHeight;
 	}
 	prefab->GetTransform()->Translate(cubePos);
+}
+
+void W3_PongScene::OnSceneActivated()
+{
+	LoadScene();
+}
+void W3_PongScene::LoadScene()
+{
+	XMFLOAT3 cubeStartPos{ -10.f,5.f,0.f };
+	XMFLOAT3 sphereStartPos{ 0.f, 5.f, 0.f };
+	m_pCubes[0]->GetTransform()->Translate(cubeStartPos);
+	cubeStartPos.x = -cubeStartPos.x;
+	m_pCubes[1]->GetTransform()->Translate(cubeStartPos);
+	m_pRedSphere->GetTransform()->Translate(sphereStartPos);
+	m_AccTimeToRest = 0;
 }

@@ -37,7 +37,7 @@ void BoneObject::Initialize(const SceneContext&)
 {
 	GameObject* pEmpty = new GameObject{};
 	AddChild(pEmpty);
-	ModelComponent* pComponent = new ModelComponent{ L"Meshes/Bone.ovm" };
+	ModelComponent* pComponent = new ModelComponent{ L"Meshes/Shapes/Bone.ovm" };
 	pComponent->SetMaterial(m_pMaterial);
 	pEmpty->AddComponent(pComponent);
 	const float degreesToRotate{ -90.f };

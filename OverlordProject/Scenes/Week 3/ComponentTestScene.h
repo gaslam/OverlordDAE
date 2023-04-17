@@ -18,5 +18,9 @@ protected:
 	void OnGUI() override;
 private:
 	SpherePrefab* m_pRedSphere{ nullptr };
+
+	enum Inputs : int {
+		reset
+	};
 };
 

@@ -58,13 +58,13 @@
 #endif
 
 #ifdef MILESTONE_1
-//#include "Scenes/Week 3/PongScene.h"
-//#include "Scenes/Week 4/ModelTestScene.h"
-//#include "Scenes/Week 4/UberMaterialScene.h"
-//#include "Scenes/Week 4/SpikyScene.h"
-//#include "Scenes/Week 4/SpriteTestScene.h"
-//#include "Scenes/Week 5/SoftwareSkinningScene_3.h"
-//#include "Scenes/Week 6/HardwareSkinningScene.h"
+#include "Scenes/Week 3/W3_PongScene.h"
+#include "Scenes/Week 4/ModelTestScene.h"
+#include "Scenes/Week 4/UberMaterialScene.h"
+#include "Scenes/Week 4/SpikeTestScene.h"
+#include "Scenes/Week 4/SpriteTestScene.h"
+#include "Scenes/Week 5/SoftwareSkinningScene_3.h"
+#include "Scenes/Week 6/HardwareSkinningScene.h"
 #include "Scenes/Milestone/BanjoTestScene.h"
 #endif
 
@@ -136,14 +136,13 @@ void MainGame::Initialize()
 #endif
 
 #ifdef MILESTONE_1
-	//SceneManager::Get()->AddGameScene(new PongScene());
-	//SceneManager::Get()->AddGameScene(new ModelTestScene());
-	//SceneManager::Get()->AddGameScene(new UberMaterialScene());
-	//SceneManager::Get()->AddGameScene(new SpikyScene());
-	//SceneManager::Get()->AddGameScene(new SpriteTestScene());
-	//SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_3());
-	//SceneManager::Get()->AddGameScene(new HardwareSkinningScene());
-	SceneManager::Get()->AddGameScene(new BanjoTestScene());
+	SceneManager::Get()->AddGameScene(new W3_PongScene());
+	SceneManager::Get()->AddGameScene(new ModelTestScene());
+	SceneManager::Get()->AddGameScene(new UberMaterialScene());
+	SceneManager::Get()->AddGameScene(new SpikeTestScene());
+	SceneManager::Get()->AddGameScene(new SpriteTestScene());
+	SceneManager::Get()->AddGameScene(new SoftwareSkinningScene_3());
+	SceneManager::Get()->AddGameScene(new HardwareSkinningScene());
 #endif
 
 #ifdef MILESTONE_2

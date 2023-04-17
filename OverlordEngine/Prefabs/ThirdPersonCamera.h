@@ -1,4 +1,5 @@
 #pragma once
+class MeshFilter;
 class ThirdPersonCamera final : public GameObject
 {
 public:
@@ -17,12 +18,13 @@ public:
 protected:
 	void Initialize(const SceneContext& sceneContext) override;
 	void Update(const SceneContext& sceneContext) override;
+	void Intersect(MeshFilter* pMeshFilter);
 private:
-	TransformComponent* m_pComponent{nullptr};
-	CameraComponent* m_pCamera{nullptr};
 	float m_Distance{};
 	float m_TotalPitch{}, m_TotalYaw{};
 	const float m_MinAngle{ 5.f }, m_MaxAngle{ 85.f };
 	float m_RotSpeed{15.f};
+	TransformComponent* m_pComponent{ nullptr };
+	CameraComponent* m_pCamera{ nullptr };
 };
 

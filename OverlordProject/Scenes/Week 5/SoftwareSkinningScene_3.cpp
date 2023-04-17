@@ -27,6 +27,7 @@ void SoftwareSkinningScene_3::Initialize()
 	m_pMeshDrawer = pBoxDrawer->AddComponent<MeshDrawComponent>(new MeshDrawComponent{ triangleCapacity,enableTransparency });
 	AddChild(pBoxDrawer);
 	InitializeVertices(boneLength);
+	m_SceneContext.pInput->AddInputAction(InputAction{ Inputs::reset,InputState::pressed,'R' });
 }
 
 void SoftwareSkinningScene_3::Update()
@@ -59,6 +60,11 @@ void SoftwareSkinningScene_3::Update()
 		m_pMeshDrawer->AddQuad(quad);
 	}
 	m_pMeshDrawer->UpdateBuffer();
+
+	if (m_SceneContext.pInput->IsActionTriggered(Inputs::reset))
+	{
+		LoadScene();
+	}
 }
 
 void SoftwareSkinningScene_3::OnGUI()
@@ -77,13 +83,19 @@ void SoftwareSkinningScene_3::OnGUI()
 
 }
 
-void SoftwareSkinningScene_3::OnSceneDeactivated()
+void SoftwareSkinningScene_3::LoadScene()
 {
 	std::fill_n(m_BoneRotations.begin(), m_BoneRotations.size(), XMFLOAT4{});
 	m_BoneRotation = 0.f;
 	const auto pFreeCamera = m_SceneContext.pCamera;
-	pFreeCamera->GetTransform()->Rotate(30, 0, 0,false);
+	pFreeCamera->GetTransform()->Rotate(30, 0, 0, false);
 	pFreeCamera->GetTransform()->Translate(0, 50, -80);
+
+}
+
+void SoftwareSkinningScene_3::OnSceneActivated()
+{
+	LoadScene();
 }
 
 void SoftwareSkinningScene_3::RotateBones()

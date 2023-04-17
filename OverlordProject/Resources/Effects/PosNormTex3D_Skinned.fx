@@ -60,7 +60,7 @@ VS_OUTPUT VS(VS_INPUT input){
 	for(int i = 0; i < 4; ++i)
 	{
 		transformedPosition += mul(originalPosition, input.blendWeights[i] * gBones[input.blendIndices[i]]);
-		transformedNormal +=  mul(input.blendWeights[i]*input.normal , (float3x3)gBones[input.blendIndices[i]]);
+		transformedNormal +=  mul(input.normal , (float3x3)gBones[input.blendIndices[i]] * input.blendWeights[i]);
 	}
 	transformedPosition.w = 1.0f;
 

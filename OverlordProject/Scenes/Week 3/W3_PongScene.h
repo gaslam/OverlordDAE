@@ -18,6 +18,7 @@ protected:
 	void Update() override;
 	void Draw() override;
 	void OnGUI() override;
+	virtual void OnSceneActivated() override;
 
 private:
 	float m_TotalTimeToRest{ 3.f };
@@ -39,14 +40,12 @@ private:
 		UpDown
 	};
 
-	enum MovementInputPlayerOne : int {
+	enum Input : int {
 		p1Up,
-		p1Down
-	};
-
-	enum MovementInputPlayerTwo : int {
-		p2Up = 2,
-		p2Down = 3
+		p1Down,
+		p2Up,
+		p2Down,
+		reset,
 	};
 
 	void ChangeDirection(const Direction& direction);
@@ -58,5 +57,6 @@ private:
 	void InitWalls(PxMaterial* mat);
 	void AddInput();
 	void MoveCube(CubePrefab* prefab, float distance);
+	void LoadScene();
 };
 

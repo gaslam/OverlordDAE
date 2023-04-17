@@ -19,7 +19,11 @@ private:
     float m_TargetFowardRotationYaw{};
     float m_TotalYaw{};
     float m_AngularSpeed{ 300.f };
-    float m_CharacterSpeed{ 20.f };
+    float m_CharacterSpeed{ 10000.f };
+    float m_CurrenSpeedX{};
+    float m_CurrenSpeedY{};
+
+    bool m_StoppedRunning{};
 
     enum CharacterState : int {
         Idle,
