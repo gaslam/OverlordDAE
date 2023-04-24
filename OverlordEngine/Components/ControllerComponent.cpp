@@ -10,7 +10,31 @@ void ControllerComponent::Initialize(const SceneContext& /*sceneContext*/)
 {
 	if(!m_IsInitialized)
 	{
-		TODO_W7(L"Complete the ControllerComponent Intialization")
+		TODO_W7(L"Complete the ControllerComponent Intialization");
+		GameObject* pOwner = GetGameObject();
+		TransformComponent* pTransform = pOwner->GetTransform();
+
+		const XMFLOAT3 posTransform = pTransform->GetPosition();
+		const auto pxPos = physx::PxExtendedVec3(posTransform.x, posTransform.y, posTransform.z);
+		m_ControllerDesc.position = pxPos;
+		m_ControllerDesc.userData = this;
+
+		GameScene* pCurrentScene = GetScene();
+
+		PhysxProxy* pProxy = pCurrentScene->GetPhysxProxy();
+
+		PxControllerManager* pControllerManager = pProxy->GetControllerManager();
+
+		m_pController = pControllerManager->createController(m_ControllerDesc);
+		if (!m_pController)
+		{
+			Logger::LogError(L"Controller is nullptr in ControllerComponent.");
+			return;
+		}
+
+		m_pController->getActor()->userData = this;
+		SetCollisionGroup(static_cast<CollisionGroup>(m_CollisionGroups.word0));
+		m_IsInitialized = true;
 	}
 }
 

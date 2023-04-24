@@ -13,19 +13,36 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	}
 
 	TODO_W7(L"Implement SpriteFontLoader >> Parse .fnt file")
-	//See BMFont Documentation for Binary Layout
+		//See BMFont Documentation for Binary Layout
 
-	//Parse the Identification bytes (B,M,F)
-	//If Identification bytes doesn't match B|M|F,
-	//Log Error (SpriteFontLoader::LoadContent > Not a valid .fnt font) &
-	//return nullptr
-	//...
+		//Parse the Identification bytes (B,M,F)
+		//If Identification bytes doesn't match B|M|F,
+		//Log Error (SpriteFontLoader::LoadContent > Not a valid .fnt font) &
+		//return nullptr
+		//...
+
+		auto B = pReader->Read<char>();
+	auto M = pReader->Read<char>();
+	auto F = pReader->Read<char>();
+	if (B != 'B' || M != 'M' || F != 'F')
+	{
+		Logger::LogError(L"SpriteFontLoader::LoadContent > Not a valid.fnt font");
+		return nullptr;
+	}
 
 	//Parse the version (version 3 required)
 	//If version is < 3,
 	//Log Error (SpriteFontLoader::LoadContent > Only .fnt version 3 is supported)
 	//return nullptr
 	//...
+
+	auto version = pReader->Read<uint8_t>();
+	if (version < 3)
+	{
+		Logger::LogError(L"SpriteFontLoader::LoadContent > Only.fnt version 3 is supported");
+		return nullptr;
+	}
+
 
 	//Valid .fnt file >> Start Parsing!
 	//use this SpriteFontDesc to store all relevant information (used to initialize a SpriteFont object)
@@ -39,6 +56,12 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	//Move the binreader to the start of the FontName [BinaryReader::MoveBufferPosition(...) or you can set its position using BinaryReader::SetBufferPosition(...))
 	//Retrieve the FontName [fontDesc.fontName]
 	//...
+	pReader->Read<uint8_t>();
+	pReader->Read<uint32_t>();
+
+	fontDesc.fontSize = pReader->Read<int16_t>();
+	pReader->MoveBufferPosition(12);
+	fontDesc.fontName = pReader->ReadNullString();
 
 	//**********
 	// BLOCK 1 *
@@ -51,6 +74,21 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	//Advance to Block2 (Move Reader)
 	//...
 
+	pReader->Read<uint8_t>();
+	pReader->Read<uint32_t>();
+
+	pReader->MoveBufferPosition(4);
+	fontDesc.textureWidth = pReader->Read<uint16_t>();
+	fontDesc.textureHeight = pReader->Read<uint16_t>();
+	uint16_t pageCount = pReader->Read<uint16_t>();
+	if (pageCount != 1)
+	{
+		Logger::LogError(L"Only one texture per font is allowed!");
+		return nullptr;
+	}
+
+	pReader->MoveBufferPosition(5);
+
 	//**********
 	// BLOCK 2 *
 	//**********
@@ -60,6 +98,13 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	//	>> page texture should be stored next to the .fnt file, pageName contains the name of the texture file
 	//	>> full texture path = asset parent_path of .fnt file (see loadInfo.assetFullPath > get parent_path) + pageName (filesystem::path::append)
 	//	>> Load the texture (ContentManager::Load<TextureData>) & Store [fontDesc.pTexture]
+	pReader->Read<uint8_t>();
+	pReader->Read<uint32_t>();
+
+	const std::wstring pageName = pReader->ReadNullString();
+	const std::wstring fullPath = loadInfo.assetFullPath.parent_path().append(pageName);
+
+	fontDesc.pTexture = ContentManager::Load<TextureData>(fullPath);
 
 	//**********
 	// BLOCK 3 *
@@ -86,6 +131,44 @@ SpriteFont* SpriteFontLoader::LoadContent(const ContentLoadInfo& loadInfo)
 	//	> key = (wchar_t) charId
 	//	> value = new FontMetric
 	//(loop restarts till all metrics are parsed)
+	pReader->Read<uint8_t>();
+	uint32_t blockSize = pReader->Read<uint32_t>();
+	auto numChars = blockSize / 20;
+
+	for (unsigned int i = 0; i < numChars; ++i)
+	{
+		auto characterId = static_cast<wchar_t>(pReader->Read<uint32_t>());
+		FontMetric metric{};
+		metric.character = characterId;
+		auto xPos = pReader->Read<uint16_t>();
+		auto yPos = pReader->Read<uint16_t>();
+		metric.width = pReader->Read<uint16_t>();
+		metric.height = pReader->Read<uint16_t>();
+		metric.offsetX = pReader->Read<int16_t>();
+		metric.offsetY = pReader->Read<int16_t>();
+		metric.advanceX = pReader->Read<int16_t>();
+		metric.page = pReader->Read<uint8_t>();
+		auto channel = pReader->Read<uint8_t>();
+
+		if (channel & 4)	  metric.channel = 0;
+		else if (channel & 2) metric.channel = 1;
+		else if (channel & 1) metric.channel = 2;
+		else if (channel & 8) metric.channel = 3;
+
+		XMFLOAT2 texCoord{};
+		if (xPos != 0)
+		{
+			texCoord.x = static_cast<float>(xPos) / fontDesc.textureWidth;
+		}
+		if (yPos != 0)
+		{
+			texCoord.y = static_cast<float>(yPos) / fontDesc.textureHeight;
+		}
+
+		metric.texCoord = texCoord;
+		fontDesc.metrics[characterId] = metric;
+
+	}
 
 	//Done!
 	delete pReader;

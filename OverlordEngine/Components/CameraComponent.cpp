@@ -63,10 +63,48 @@ void CameraComponent::SetActive(bool active)
 	pScene->SetActiveCamera(active?this:nullptr); //Switch to default camera if active==false
 }
 
-GameObject* CameraComponent::Pick(CollisionGroup /*ignoreGroups*/) const
+GameObject* CameraComponent::Pick(CollisionGroup ignoreGroups) const
 {
 	TODO_W7(L"Implement Picking Logic")
+		const auto pGameObject = GetGameObject();
+	ASSERT_IF(!pGameObject, L"Failed to pick. Parent game object is null");
 
+	if (!pGameObject) return nullptr; //help the compiler... (C6011)
+	const auto pScene = pGameObject->GetScene();
+	ASSERT_IF(!pScene, L"Failed to pick. Parent game scene is null");
+	if (!pScene) return nullptr;
+
+	const auto pContext = pScene->GetSceneContext();
+	const float halfWidth{ pContext.windowWidth / 2.f };
+	const float halfHeight{ pContext.windowHeight / 2.f };
+	POINT mousePos = pContext.pInput->GetMousePosition();
+	const float xNDC{ (mousePos.x - halfWidth) / halfWidth };
+	const float yNDC{ (halfHeight - mousePos.y) / halfHeight };
+	XMMATRIX viewInverse{ XMLoadFloat4x4(&m_ViewProjectionInverse) };
+
+	auto nearPointVector = XMVector3TransformCoord(XMVectorSet(xNDC, yNDC, 0, 0), XMLoadFloat4x4(&m_ViewProjectionInverse));
+	auto farPointVector = XMVector3TransformCoord(XMVectorSet(xNDC, yNDC, 1, 0), XMLoadFloat4x4(&m_ViewProjectionInverse));
+
+	XMFLOAT3 ndcNearPoint;
+	XMFLOAT3 ndcFarPoint;
+
+	XMStoreFloat3(&ndcNearPoint, nearPointVector);
+	XMStoreFloat3(&ndcFarPoint, farPointVector);
+
+	physx::PxVec3 start{ ndcNearPoint.x,ndcNearPoint.y,ndcNearPoint.z };
+	physx::PxVec3 direction{ physx::PxVec3(ndcFarPoint.x - ndcNearPoint.x,ndcFarPoint.y - ndcNearPoint.y, ndcFarPoint.z - ndcNearPoint.z).getNormalized()};
+
+	PxQueryFilterData filterData{};
+	filterData.data.word0 = ~UINT(ignoreGroups);
+
+	PxRaycastBuffer hit{};
+	if (pScene->GetPhysxProxy()->Raycast(start, direction, PX_MAX_F32, hit, PxHitFlag::eDEFAULT, filterData))
+	{
+		if (auto pObject = static_cast<BaseComponent*>(hit.block.actor->userData))
+		{
+			return pObject->GetGameObject();
+		}
+	}
 	
 	return nullptr;
 }
