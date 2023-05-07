@@ -17,6 +17,26 @@ SoundManager::~SoundManager()
 	}
 }
 
+bool SoundManager::ErrorCheck(FMOD_RESULT res)
+{
+	if (res != FMOD_OK)
+	{
+		std::wstringstream strstr;
+		strstr << L"FMOD error! \n[" << res << L"] " << FMOD_ErrorString(res) << std::endl;
+		Logger::LogError(strstr.str());
+		return false;
+	}
+
+	return true;
+}
+
+void SoundManager::Update()
+{
+	////UPDATE FMOD SYSTEM (3D sound requirement)
+	//FMOD_RESULT result = m_pFmodSystem->update();
+	//ErrorCheck(result);
+}
+
 void SoundManager::Initialize()
 {
 	FMOD::Debug_Initialize(FMOD_DEBUG_LEVEL_ERROR);

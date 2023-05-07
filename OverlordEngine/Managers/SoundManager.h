@@ -7,6 +7,9 @@ public:
 	SoundManager& operator=(const SoundManager& other) = delete;
 	SoundManager& operator=(SoundManager&& other) noexcept = delete;
 
+	bool ErrorCheck(FMOD_RESULT res);
+	void Update();
+
 	FMOD::System* GetSystem() const { return m_pFmodSystem; }
 
 protected:

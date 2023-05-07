@@ -21,7 +21,6 @@
     <ClCompile Include="Scenes\Week 6\HardwareSkinningScene.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
     <ClCompile Include="Scenes\Milestone\BanjoTestScene.cpp" />
-    <ClCompile Include="Blueprints\PlayableCharacter\PlayableCharacter.cpp" />
     <ClCompile Include="Prefabs\BoneObject.cpp" />
     <ClCompile Include="Prefabs\CubePrefab.cpp" />
     <ClCompile Include="Prefabs\SpherePrefab.cpp" />
@@ -30,6 +29,9 @@
     <ClCompile Include="Scenes\Week 7\FontTestScene.cpp" />
     <ClCompile Include="Scenes\Week 7\CharacterScene.cpp" />
     <ClCompile Include="Prefabs\Character.cpp" />
+    <ClCompile Include="Scenes\Week 8\ShadowMappingScene.cpp" />
+    <ClCompile Include="Materials\Shadow\DiffuseMaterial_Shadow.cpp" />
+    <ClCompile Include="Materials\Shadow\DiffuseMaterial_Shadow_Skinned.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -51,7 +53,6 @@
     <ClInclude Include="Scenes\Week 6\HardwareSkinningScene.h" />
     <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
     <ClInclude Include="Scenes\Milestone\BanjoTestScene.h" />
-    <ClInclude Include="Blueprints\PlayableCharacter\PlayableCharacter.h" />
     <ClInclude Include="ProjectUtils.h" />
     <ClInclude Include="Prefabs\BoneObject.h" />
     <ClInclude Include="Prefabs\CubePrefab.h" />
@@ -61,5 +62,8 @@
     <ClInclude Include="Scenes\Week 7\FontTestScene.h" />
     <ClInclude Include="Scenes\Week 7\CharacterScene.h" />
     <ClInclude Include="Prefabs\Character.h" />
+    <ClInclude Include="Scenes\Week 8\ShadowMappingScene.h" />
+    <ClInclude Include="Materials\Shadow\DiffuseMaterial_Shadow.h" />
+    <ClInclude Include="Materials\Shadow\DiffuseMaterial_Shadow_Skinned.h" />
   </ItemGroup>
 </Project>

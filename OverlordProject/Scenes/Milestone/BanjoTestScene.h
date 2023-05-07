@@ -1,5 +1,5 @@
 #pragma once
-class PlayableCharacter;
+class Character;
 class BanjoTestScene :
     public GameScene
 {
@@ -15,6 +15,17 @@ protected:
 	void Initialize() override;
 	void OnGUI() override;
 private:
-	PlayableCharacter* m_pPlayableCharacter{ nullptr };
+	Character* m_pPlayableCharacter{ nullptr };
+	FMOD::Channel* m_pChannel2D{ nullptr };
+
+	enum InputIds
+	{
+		CharacterMoveLeft,
+		CharacterMoveRight,
+		CharacterMoveForward,
+		CharacterMoveBackward,
+		CharacterJump,
+		reset
+	};
 };
 

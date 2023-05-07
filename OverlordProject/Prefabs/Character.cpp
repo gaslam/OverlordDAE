@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include "Character.h"
+#include "Prefabs/ThirdPersonCamera.h"
 
 Character::Character(const CharacterDesc& characterDesc) :
 	m_CharacterDesc{ characterDesc },
 	m_MoveAcceleration(characterDesc.maxMoveSpeed / characterDesc.moveAccelerationTime),
 	m_FallAcceleration(characterDesc.maxFallSpeed / characterDesc.fallAccelerationTime)
-{}
+{
+}
 
 void Character::Initialize(const SceneContext& /*sceneContext*/)
 {
@@ -13,11 +15,21 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	m_pControllerComponent = AddComponent(new ControllerComponent(m_CharacterDesc.controller));
 
 	//Camera
-	const auto pCamera = AddChild(new FixedCamera());
+	const auto pCamera = AddChild(new ThirdPersonCamera());
 	m_pCameraComponent = pCamera->GetComponent<CameraComponent>();
 	m_pCameraComponent->SetActive(true); //Uncomment to make this camera the active camera
+	auto soundManager = SoundManager::Get();
+	auto pSoundSystem = soundManager->GetSystem();
+	FMOD_RESULT result = pSoundSystem->createSound("Resources/Sounds/Mario/sm64_mario_hoo.wav", FMOD_DEFAULT, nullptr, &m_pHooSound);
+	soundManager->ErrorCheck(result);
+	result = pSoundSystem->createSound("Resources/Sounds/Mario/sm64_mario_hoohoo.wav", FMOD_DEFAULT, nullptr, &m_pWooHooSound);
+	soundManager->ErrorCheck(result);
+	m_pChannel3D->set3DMinMaxDistance(0.f, 100.f);
+}
 
-	pCamera->GetTransform()->Translate(0.f, m_CharacterDesc.controller.height * .5f, 0.f);
+inline FMOD_VECTOR ToFmod(XMFLOAT3 v)
+{
+	return FMOD_VECTOR(v.x, v.y, v.z);
 }
 
 void Character::Update(const SceneContext& sceneContext)
@@ -27,7 +39,11 @@ void Character::Update(const SceneContext& sceneContext)
 		constexpr float epsilon{ 0.01f }; //Constant that can be used to compare if a float is near zero
 		const float elapsedTime{ sceneContext.pGameTime->GetElapsed() };
 		const bool moveForward = sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveForward);
-		const bool moveBackward = sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveBackward);
+		bool moveBackward = false;
+		if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveBackward))
+		{
+			moveBackward = true;
+		}
 		const bool moveRight = sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveRight);
 		const bool moveLeft = sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_MoveLeft);
 
@@ -51,22 +67,9 @@ void Character::Update(const SceneContext& sceneContext)
 		}
 
 		//## Input Gathering (look)
-		XMFLOAT2 look{ 0.f, 0.f }; //Uncomment
 		//Only if the Left Mouse Button is Down >
 			// Store the MouseMovement in the local 'look' variable (cast is required)
 		//Optional: in case look.x AND look.y are near zero, you could use the Right ThumbStickPosition for look
-
-		if (sceneContext.pInput->IsMouseButton(InputState::down, VK_LBUTTON))
-		{
-			auto mouseLook = sceneContext.pInput->GetMouseMovement();
-			look = { static_cast<float>(mouseLook.x), static_cast<float>(mouseLook.y) };
-		}
-
-		if (abs(look.y) < epsilon && abs(look.x) < epsilon)
-		{
-			bool isLeftThumbstick{ false };
-			look = sceneContext.pInput->GetThumbstickPosition(isLeftThumbstick);
-		}
 
 		//************************
 		//GATHERING TRANSFORM INFO
@@ -74,12 +77,12 @@ void Character::Update(const SceneContext& sceneContext)
 		//Retrieve the TransformComponent
 		//Retrieve the forward & right vector (as XMVECTOR) from the TransformComponent
 
-		auto pTransform = GetTransform();
-		auto pForward = XMLoadFloat3(&pTransform->GetForward());
+		auto pTransform = m_pCameraComponent->GetTransform();
+		auto forwardVec = XMLoadFloat3(&pTransform->GetForward());
 		auto pRight = XMLoadFloat3(&pTransform->GetRight());
 
 		XMVECTOR moveDir{};
-		moveDir += pForward * move.y;
+		moveDir += forwardVec * move.y;
 		moveDir += pRight * move.x;
 
 		//***************
@@ -89,20 +92,34 @@ void Character::Update(const SceneContext& sceneContext)
 		//Make sure this calculated on a framerate independent way and uses CharacterDesc::rotationSpeed.
 		//Rotate this character based on the TotalPitch (X) and TotalYaw (Y)
 
-		m_TotalYaw += look.x * m_CharacterDesc.rotationSpeed * elapsedTime;
-		m_TotalPitch += look.y * m_CharacterDesc.rotationSpeed * elapsedTime;
-		pTransform->Rotate(m_TotalPitch, m_TotalYaw, 0);
+		m_TotalYaw = move.x * m_CharacterDesc.rotationSpeed;
+		m_TotalPitch = move.y * m_CharacterDesc.rotationSpeed;
 		//********
 		//MOVEMENT
 
 		//## Horizontal Velocity (Forward/Backward/Right/Left)
 		//Calculate the current move acceleration for this frame (m_MoveAcceleration * ElapsedTime)
 		const float acceleration = m_MoveAcceleration * elapsedTime;
-		const bool isMoving = move.x > 0|| move.y > 0;
+		const bool isMoving = move.x != 0|| move.y != 0;
 		if (isMoving)
 		{
 			m_CurrentDirection = XMFLOAT3{ XMVectorGetX( moveDir),0,XMVectorGetZ(moveDir) };
 			m_MoveSpeed += acceleration;
+
+			auto children = GetChildren<GameObject>();
+			auto characterForward = GetTransform()->GetForward();
+			for (auto child : children)
+			{
+				const float pi = 3.1415926535f;
+				float angle = atan2(-characterForward.z, -characterForward.x) - atan2(m_TotalVelocity.z, m_TotalVelocity.x);
+				angle *= (180 / pi);
+				child->GetTransform()->Rotate(0, angle, 0);
+			}
+			if(m_State != Running)
+			{
+				m_State = Running;
+				m_pModelAnimator->SetAnimation(m_State);
+			}
 		}
 		else
 		{
@@ -145,13 +162,32 @@ void Character::Update(const SceneContext& sceneContext)
 				m_TotalVelocity.y = -m_CharacterDesc.maxFallSpeed;
 			}
 		}
-		else if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_Jump))
-		{
-			m_TotalVelocity.y = m_CharacterDesc.JumpSpeed;
-		}
 		else
 		{
 			m_TotalVelocity.y = 0;
+			m_TimesJumped = 0;
+			if (m_State != Idle && !isMoving)
+			{
+				m_State = Idle;
+				m_pModelAnimator->SetAnimation(static_cast<UINT>(m_State));
+			}
+		}
+
+		if (sceneContext.pInput->IsActionTriggered(m_CharacterDesc.actionId_Jump) && m_TimesJumped < m_MaxPossibleJumps)
+		{
+			m_TotalVelocity.y = m_CharacterDesc.JumpSpeed;
+			if (m_State != Jump)
+			{
+				m_State = Jump;
+			}
+			m_pModelAnimator->SetAnimation(static_cast<UINT>(m_State));
+			auto soundManager = SoundManager::Get()->GetSystem();
+			auto soundToPlay = m_TimesJumped % 2 == 0 ? m_pWooHooSound : m_pHooSound;
+			bool isPlaying = false;
+			m_pChannel3D->isPlaying(&isPlaying);
+			if (isPlaying)m_pChannel3D->stop();
+			soundManager->playSound(soundToPlay, nullptr, false, &m_pChannel3D);
+			++m_TimesJumped;
 		}
 
 		//## Vertical Movement (Jump/Fall)
@@ -179,6 +215,10 @@ void Character::Update(const SceneContext& sceneContext)
 
 		//The above is a simple implementation of Movement Dynamics, adjust the code to further improve the movement logic and behaviour.
 		//Also, it can be usefull to use a seperate RayCast to check if the character is grounded (more responsive)
+
+		auto playerSoundPos = ToFmod(GetTransform()->GetPosition());
+		auto soundVel = ToFmod(m_TotalVelocity);
+		m_pChannel3D->set3DAttributes(&playerSoundPos, &soundVel);
 	}
 }
 
