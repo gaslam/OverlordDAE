@@ -1,0 +1,10 @@
+{
+    "texturePath": "Textures/Objects/Star/Eye/",
+    "textures": [{
+            "name": "eye",
+            "type": 1,
+            "extension": "png",
+            "meshIndex": 0
+        }
+    ]
+}

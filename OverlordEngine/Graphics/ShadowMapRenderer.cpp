@@ -124,7 +124,7 @@ void ShadowMapRenderer::DrawMesh(const SceneContext& sceneContext, MeshFilter* p
 	auto pDeviceContxt = sceneContext.d3dContext.pDeviceContext;
 
 	pDeviceContxt->IASetInputLayout(techniqueContext.pInputLayout);
-	pDeviceContxt->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pDeviceContxt->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	for (auto subMesh : pMeshFilter->GetMeshes())
 	{

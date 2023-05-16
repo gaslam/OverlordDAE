@@ -9,6 +9,10 @@ public:
 	ParticleMaterial& operator=(const ParticleMaterial& other) = delete;
 	ParticleMaterial& operator=(ParticleMaterial&& other) noexcept = delete;
 
+	void SetVariableWorldViewProj(const float* pData);
+	void SetVariableViewInv(const float* pData);
+	void SetVariableParticleTexture(TextureData* data);
+
 protected:
 	void InitializeEffectVariables() override;
 };

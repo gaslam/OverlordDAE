@@ -1,0 +1,52 @@
+{
+    "texturePath": "Textures/Characters/Mario/",
+    "textures": [{
+            "name": "Mario64Eye_alb.0",
+            "type": 2,
+            "extension": "png",
+            "meshIndex": 0
+        },
+        {
+            "name": "Mario64Hand_alb",
+            "type": 2,
+            "extension": "png",
+            "meshIndex": 1
+        },
+        {
+            "name": "Mario64Body_alb",
+            "type": 2,
+            "extension": "png",
+            "meshIndex": 2
+        },
+        {
+            "name": "Mario64Face_alb",
+            "type": 2,
+            "extension": "png",
+            "meshIndex": 3
+        },
+        {
+            "name": "Mario64Cap_alb",
+            "type": 2,
+            "extension": "png",
+            "meshIndex": 4
+        },
+        {
+            "name": "Mario64Cap_alb",
+            "type": 2,
+            "extension": "png",
+            "meshIndex": 5
+        },
+        {
+            "name": "Mario64Cap_alb",
+            "type": 2,
+            "extension": "png",
+            "meshIndex": 6
+        },
+        {
+            "name": "Mario64Hand_alb",
+            "type": 2,
+            "extension": "png",
+            "meshIndex": 7
+        }
+    ]
+}

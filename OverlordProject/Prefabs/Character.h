@@ -77,8 +77,8 @@ private:
 
 	ModelComponent* m_pModelComponent{};
 	FMOD::Channel* m_pChannel3D{};
-	FMOD::Sound* m_pHooSound;
-	FMOD::Sound* m_pWooHooSound;
+	FMOD::Sound* m_pHooSound{};
+	FMOD::Sound* m_pWooHooSound{};
 
 	bool m_StoppedRunning{};
 

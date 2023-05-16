@@ -1,0 +1,17 @@
+{
+    "texturePath": "Textures/Environments/Level_1/Fences/",
+    "textures": [
+        {
+            "name": "Fence",
+            "type": 1,
+            "extension": "png",
+            "meshIndex": 0
+        },
+        {
+            "name": "SteelFence",
+            "type": 1,
+            "extension": "png",
+            "meshIndex": 1
+        }
+    ]
+}

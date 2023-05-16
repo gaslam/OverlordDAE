@@ -1,9 +1,6 @@
 //Precompiled Header [ALWAYS ON TOP IN CPP]
 #include "stdafx.h"
 #include "MinionScene.h"
-
-#include "Prefabs/CubePrefab.h"
-#include "Prefabs/SpherePrefab.h"
 #include "Prefabs/TorusPrefab.h"
 
 

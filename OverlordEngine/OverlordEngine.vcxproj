@@ -105,8 +105,10 @@
     <ClInclude Include="Components\ControllerComponent.h" />
     <ClInclude Include="Components\ParticleEmitterComponent.h" />
     <ClInclude Include="Graphics\ShadowMapRenderer.h" />
+    <ClInclude Include="Content\JsonLoader.h" />
     <ClInclude Include="Lab_Todos.h" />
     <ClInclude Include="Managers\LightManager.h" />
+    <ClInclude Include="Misc\json.hpp" />
     <ClInclude Include="Misc\ModelAnimator.h" />
     <ClInclude Include="Content\SpriteFontLoader.h" />
     <ClInclude Include="Graphics\TextRenderer.h" />
@@ -177,6 +179,7 @@
     <ClCompile Include="Components\ControllerComponent.cpp" />
     <ClCompile Include="Components\ParticleEmitterComponent.cpp" />
     <ClCompile Include="Graphics\ShadowMapRenderer.cpp" />
+    <ClCompile Include="Content\JsonLoader.cpp" />
     <ClCompile Include="Managers\LightManager.cpp" />
     <ClCompile Include="Misc\ModelAnimator.cpp" />
     <ClCompile Include="Content\SpriteFontLoader.cpp" />

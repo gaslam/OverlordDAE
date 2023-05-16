@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ContentManager.h"
 
+#include "Content/JsonLoader.h"
+
 std::vector<BaseLoader*> ContentManager::m_Loaders = std::vector<BaseLoader*>();
 GameContext ContentManager::m_GameContext = {};
 bool ContentManager::m_IsInitialized = false;
@@ -29,6 +31,7 @@ void ContentManager::Initialize(const GameContext& gameContext)
 		AddLoader(new PxTriangleMeshLoader);
 		AddLoader(new TextureDataLoader);
 		AddLoader(new SpriteFontLoader);
+		AddLoader(new JsonLoader);
 	}
 }
 

@@ -31,22 +31,21 @@ void ThirdPersonCamera::Update(const SceneContext& sceneContext)
 {
 	if (m_pCamera->IsActive())
 	{
-		auto mouseDir = sceneContext.pInput->GetMouseMovementNormalized();
 		XMFLOAT2 look{ 0, 0 };
-		bool mouseMoved{ false };
 		const auto& mouseMove = InputManager::GetMouseMovement();
 		look.x = static_cast<float>(mouseMove.x);
 		look.y = static_cast<float>(mouseMove.y);
+		float rotSpeed{ m_MouseRotSpeed };
 
-		mouseMoved = mouseMove.x != 0 || mouseMove.y != 0;
+		bool mouseMoved = mouseMove.x != 0 || mouseMove.y != 0;
 		if (!mouseMoved)
 		{
 			look = InputManager::GetThumbstickPosition(false);
+			rotSpeed = m_ControllerRotSpeed;
 		}
 		const float elapsedTime = sceneContext.pGameTime->GetElapsed();
-
-		m_TotalYaw += -look.x * m_RotSpeed * elapsedTime;
-		m_TotalPitch += -look.y * m_RotSpeed * elapsedTime;
+		m_TotalYaw += -look.x * rotSpeed * elapsedTime;
+		m_TotalPitch += -look.y * rotSpeed * elapsedTime;
 
 		if (m_TotalPitch > m_MaxAngle)
 		{
@@ -65,7 +64,7 @@ void ThirdPersonCamera::Update(const SceneContext& sceneContext)
 		auto pos = GetParent()->GetTransform()->GetPosition();
 		auto currPos = XMLoadFloat3(&pos);
 		float oldDist{ FLT_MAX };
-		for (auto& environmentModel : m_pModelsToAvoid)
+		for (const auto environmentModel : m_pModelsToAvoid)
 		{
 			if (!environmentModel->HasMeshFilter())
 			{

@@ -1,0 +1,131 @@
+{
+    "texturePath": "Textures/Environments/Level_1/Body/",
+    "textures": [
+        {
+            "name": "Material.030_1FAAE88D_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 0
+        },
+        {
+            "name": "Material.029_359289F2_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 1
+        },
+        {
+            "name": "Material.028_6E3A21B_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 2
+        },
+        {
+            "name": "Material.027_6B1A233B_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 3
+        },
+        {
+            "name": "Material.026_6B2D96F_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 4
+        },
+        {
+            "name": "Material.025_12436720_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 5
+        },
+        {
+            "name": "Material.024_1FAAE88D_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 6
+        },
+        {
+            "name": "Material.023_1FAAE88D_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 7
+        },
+        {
+            "name": "Material.020_275F399C_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 8
+        },
+        {
+            "name": "Material.019_4020CDFE_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 9
+        },
+        {
+            "name": "Material.018_1B46C8C_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 10
+        },
+        {
+            "name": "Material.017_6C631877_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 11
+        },
+        {
+            "name": "Material.017_6C631877_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 12
+        },
+        {
+            "name": "Material.010_C1DF883_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 13
+        },
+        {
+            "name": "Material.010_6B2D96F_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 14
+        },
+        {
+            "name": "Material.010_3F485258_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 15
+        },
+        {
+            "name": "Material.010_3D49A9D5_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 16
+        },
+        {
+            "name": "Material.010_359289F2_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 17
+        },
+        {
+            "name": "Material.010_6B2D96F_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 18
+        },
+        {
+            "name": "Material.010_12436720_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 19
+        },
+        {
+            "name": "Material.010_10E99677_c.bmp",
+            "type": 0,
+            "extension": "bmp",
+            "meshIndex": 20
+        }
+    ]
+}

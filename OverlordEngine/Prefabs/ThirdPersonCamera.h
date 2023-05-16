@@ -26,7 +26,8 @@ private:
 	float m_Distance{};
 	float m_TotalPitch{}, m_TotalYaw{};
 	const float m_MinAngle{ 5.f }, m_MaxAngle{ 85.f };
-	float m_RotSpeed{15.f};
+	float m_MouseRotSpeed{10.f};
+	float m_ControllerRotSpeed{50.f};
 	XMFLOAT3 m_BackwardsDir{};
 	TransformComponent* m_pComponent{ nullptr };
 	CameraComponent* m_pCamera{ nullptr };

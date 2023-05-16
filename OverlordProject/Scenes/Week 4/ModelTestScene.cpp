@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "ModelTestScene.h"
-#include <Materials/ColorMaterial.h>
 #include <Materials/DiffuseMaterial.h>
 
 ModelTestScene::ModelTestScene() : GameScene(L"ModelTestScene")

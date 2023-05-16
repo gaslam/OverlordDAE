@@ -69,19 +69,3 @@ namespace ConvertUtil
 	}
 }
 
-namespace ModelUtils
-{
-	template <typename T>
-	std::enable_if<std::is_base_of_v<BaseMaterial,T>,ModelComponent>::type*
-	CreateModelWithTexturesAndMaterials(std::vector<T*>& pMaterials,std::wstring& filePathModel,std::wstring& filePathTextures,std::wstring* textures,const UINT8 texturesSize)
-	{
-		ModelComponent* pModel = new ModelComponent(filePathModel);
-		for (UINT8 i{}; i < texturesSize; ++i)
-		{
-			pMaterials[i]->SetDiffuseTexture(filePathTextures + textures[i]);
-			pModel->SetMaterial(pMaterials[i], i);
-		}
-		return pModel;
-	}
-}
-

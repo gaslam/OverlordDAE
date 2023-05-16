@@ -1,0 +1,11 @@
+{
+    "texturePath": "Textures/Objects/Star/Body/",
+    "textures": [
+        {
+            "name": "body",
+            "type": 0,
+            "extension": "png",
+            "meshIndex": 0
+        }
+    ]
+}
