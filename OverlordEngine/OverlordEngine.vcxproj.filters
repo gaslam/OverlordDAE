@@ -57,6 +57,7 @@
     <ClCompile Include="Prefabs\ThirdPersonCamera.cpp" />
     <ClCompile Include="Content\JsonLoader.cpp" />
     <ClCompile Include="Misc\ParticleMaterial.cpp" />
+    <ClCompile Include="Components\ButtonComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -126,5 +127,6 @@
     <ClInclude Include="Content\JsonLoader.h" />
     <ClInclude Include="Misc\json.hpp" />
     <ClInclude Include="Misc\ParticleMaterial.h" />
+    <ClInclude Include="Components\ButtonComponent.h" />
   </ItemGroup>
 </Project>

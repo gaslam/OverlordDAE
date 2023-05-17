@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "SpriteComponent.h"
 
-SpriteComponent::SpriteComponent(const std::wstring& spriteAsset, const XMFLOAT2& pivot, const XMFLOAT4& color):
+SpriteComponent::SpriteComponent(const std::wstring& spriteAsset, const XMFLOAT2& pivot, const XMFLOAT4& color, bool canDraw) :
 	m_SpriteAsset(spriteAsset),
 	m_Pivot(pivot),
-	m_Color(color)
+	m_Color(color),
+	m_CanDraw{ canDraw }
 {}
 
 void SpriteComponent::Initialize(const SceneContext& /*sceneContext*/)
@@ -20,7 +21,7 @@ void SpriteComponent::SetTexture(const std::wstring& spriteAsset)
 
 void SpriteComponent::Draw(const SceneContext& sceneContext)
 {
-	if (!m_pTexture)
+	if (!m_pTexture || !m_CanDraw)
 		return;
 
 	TODO_W4(L"Draw the sprite with SpriteRenderer::Draw")
@@ -30,11 +31,11 @@ void SpriteComponent::Draw(const SceneContext& sceneContext)
 		// you will need to position (X&Y should be in screenspace, Z contains the depth between [0,1]), the rotation and the scale from the owning GameObject
 		// You can use the MathHelper::QuaternionToEuler function to help you with the z rotation 
 		auto pTransform = m_pGameObject->GetComponent<TransformComponent>();
-		auto pos = pTransform->GetWorldPosition();
-		auto scale = pTransform->GetWorldScale();
+	auto pos = pTransform->GetWorldPosition();
+	auto scale = pTransform->GetWorldScale();
 
-		SpriteRenderer::Get()->DrawImmediate(
-			sceneContext.d3dContext, m_pTexture->GetShaderResourceView(),
-			XMFLOAT2{ pos.x,pos.y }, m_Color, m_Pivot, XMFLOAT2{ scale.x,scale.y },
-			MathHelper::QuaternionToEuler(pTransform->GetWorldRotation()).z);
+	SpriteRenderer::Get()->DrawImmediate(
+		sceneContext.d3dContext, m_pTexture->GetShaderResourceView(),
+		XMFLOAT2{ pos.x,pos.y }, m_Color, m_Pivot, XMFLOAT2{ scale.x,scale.y },
+		MathHelper::QuaternionToEuler(pTransform->GetWorldRotation()).z);
 }
