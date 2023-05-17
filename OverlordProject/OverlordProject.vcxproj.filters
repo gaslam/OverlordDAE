@@ -39,6 +39,9 @@
     <ClCompile Include="Scenes\Week 10\PostProcessingScene.cpp" />
     <ClCompile Include="Materials\Post\PostGrayscale.cpp" />
     <ClCompile Include="Materials\Post\PostBlur.cpp" />
+    <ClCompile Include="Scenes\Milestone\MainMenuScene.cpp" />
+    <ClCompile Include="Scenes\Milestone\EndMenuScene.cpp" />
+    <ClCompile Include="Scenes\Milestone\GameOverScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -79,5 +82,8 @@
     <ClInclude Include="Scenes\Week 10\PostProcessingScene.h" />
     <ClInclude Include="Materials\Post\PostGrayscale.h" />
     <ClInclude Include="Materials\Post\PostBlur.h" />
+    <ClInclude Include="Scenes\Milestone\MainMenuScene.h" />
+    <ClInclude Include="Scenes\Milestone\EndMenuScene.h" />
+    <ClInclude Include="Scenes\Milestone\GameOverScene.h" />
   </ItemGroup>
 </Project>

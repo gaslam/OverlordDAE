@@ -1,0 +1,22 @@
+{
+"menu" : "GameOverMenu",
+"fileExtension" : ".jpg",
+"buttons" :[{
+    "pos":
+    {
+        "x" : 484,
+        "y" : 392
+    },
+    "width" : 317,
+    "height" : 85  
+    },
+    {
+        "pos":
+        {
+            "x" : 516,
+            "y" : 485
+        },
+        "width" : 249,
+        "height" : 93  
+    }]
+}

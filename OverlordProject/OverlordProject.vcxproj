@@ -93,6 +93,9 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Scenes\Milestone\GameOverScene.cpp" />
+    <ClCompile Include="Scenes\Milestone\EndMenuScene.cpp" />
+    <ClCompile Include="Scenes\Milestone\MainMenuScene.cpp" />
     <ClCompile Include="Materials\Post\PostGrayscale.cpp" />
     <ClCompile Include="Materials\Post\PostBlur.cpp" />
     <ClCompile Include="Prefabs\CoinObject.cpp" />
@@ -150,6 +153,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Scenes\Milestone\GameOverScene.h" />
+    <ClInclude Include="Scenes\Milestone\EndMenuScene.h" />
+    <ClInclude Include="Scenes\Milestone\MainMenuScene.h" />
     <ClInclude Include="Materials\Post\PostGrayscale.h" />
     <ClInclude Include="Materials\Post\PostBlur.h" />
     <ClInclude Include="Prefabs\CoinObject.h" />

@@ -86,10 +86,7 @@ void BanjoTestScene::Initialize()
 	//SOUND 2D
 	auto pFmod = soundManager->GetSystem();
 
-	FMOD::Sound* pSound{};
-	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Level1/1_05 Super_Mario_64_Main_Theme.mp3", FMOD_DEFAULT || FMOD_LOOP_NORMAL, nullptr, &pSound);
-	soundManager->ErrorCheck(result);
-	result = pFmod->playSound(pSound, nullptr, false, &m_pChannel2D);
+	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Level1/1_05 Super_Mario_64_Main_Theme.mp3", FMOD_DEFAULT || FMOD_LOOP_NORMAL, nullptr, &m_pBackgroundMusic);
 	soundManager->ErrorCheck(result);
 	AddStars();
 	AddCoins();
@@ -165,4 +162,17 @@ void BanjoTestScene::Update()
 			--i;
 		}
 	}
+}
+
+void BanjoTestScene::OnSceneActivated()
+{
+	const auto soundManager = SoundManager::Get();
+	const auto pFmod = soundManager->GetSystem();
+	const FMOD_RESULT result = pFmod->playSound(m_pBackgroundMusic, nullptr, false, &m_pChannel2D);
+	soundManager->ErrorCheck(result);
+}
+
+void BanjoTestScene::OnSceneDeactivated()
+{
+	m_pChannel2D->stop();
 }

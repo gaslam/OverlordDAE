@@ -1,0 +1,22 @@
+{
+"menu" : "EndMenu",
+"fileExtension" : ".jpg",
+"buttons" :[{
+    "pos":
+    {
+        "x" : 516,
+        "y" : 392
+    },
+    "width" : 249,
+    "height" : 93  
+    },
+    {
+        "pos":
+        {
+            "x" : 516,
+            "y" : 485
+        },
+        "width" : 249,
+        "height" : 93  
+    }]
+}

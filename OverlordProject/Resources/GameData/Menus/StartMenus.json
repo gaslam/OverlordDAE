@@ -1,0 +1,43 @@
+[{
+"menu" : "MainMenu",
+"fileExtension" : ".jpg",
+"buttons" :[{
+    "pos":
+    {
+        "x" : 515,
+        "y" : 344
+    },
+    "width" : 249,
+    "height" : 93  
+    },
+    {
+        "pos":
+        {
+            "x" : 515,
+            "y" : 439
+        },
+        "width" : 249,
+        "height" : 93  
+    },
+    {
+        "pos":
+        {
+            "x" : 515,
+            "y" : 535
+        },
+        "width" : 249,
+        "height" : 93  
+    }]
+},{
+    "menu" : "ControlMenu",
+    "fileExtension" : ".jpg",
+    "buttons" :[{
+        "pos":
+        {
+            "x" : 41,
+            "y" : 587
+        },
+        "width" : 143,
+        "height" : 49  
+        }]
+    }]

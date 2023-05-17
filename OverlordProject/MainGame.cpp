@@ -9,9 +9,9 @@
 // #define W7
 // #define W8
 // #define W9
- #define W10
+// #define W10
 
-// #define EXAM
+#define EXAM
 
 /*MILESTONE Content*/
  //#define MILESTONE_1
@@ -80,7 +80,10 @@
 #endif
 
 #ifdef EXAM
+#include "Scenes/Milestone/MainMenuScene.h"
 #include "Scenes/Milestone/BanjoTestScene.h"
+#include "Scenes/Milestone/EndMenuScene.h"
+#include "Scenes/Milestone/GameOverScene.h"
 #endif
 
 #pragma endregion
@@ -161,6 +164,9 @@ void MainGame::Initialize()
 #endif
 
 #ifdef EXAM
+	SceneManager::Get()->AddGameScene(new GameOverScene());
+	SceneManager::Get()->AddGameScene(new EndMenuScene());
+	SceneManager::Get()->AddGameScene(new MainMenuScene());
 	SceneManager::Get()->AddGameScene(new BanjoTestScene());
 #endif
 }
