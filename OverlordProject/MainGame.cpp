@@ -164,9 +164,10 @@ void MainGame::Initialize()
 #endif
 
 #ifdef EXAM
+	SceneManager::Get()->AddGameScene(new MainMenuScene());
 	SceneManager::Get()->AddGameScene(new GameOverScene());
 	SceneManager::Get()->AddGameScene(new EndMenuScene());
-	SceneManager::Get()->AddGameScene(new MainMenuScene());
+
 	SceneManager::Get()->AddGameScene(new BanjoTestScene());
 #endif
 }
