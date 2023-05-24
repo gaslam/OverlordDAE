@@ -114,13 +114,6 @@ void ThirdPersonCamera::Update(const SceneContext& sceneContext)
 
 void ThirdPersonCamera::Draw(const SceneContext&)
 {
-	auto start = GetParent()->GetTransform()->GetPosition();
-	start.y += 0.001f;
-	auto end = XMLoadFloat3(&start) + (XMLoadFloat3(&m_BackwardsDir) * 1.f);
-	XMFLOAT3 endFl;
-	XMStoreFloat3(&endFl, end);
-	endFl.z -= 0.001f;
-	DebugRenderer::DrawLine(start, endFl);
 }
 
 void ThirdPersonCamera::Intersect(MeshFilter*)
