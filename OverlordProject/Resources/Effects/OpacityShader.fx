@@ -14,12 +14,6 @@ struct VS_OUTPUT {
 	float2 TexCoord: TEXCOORD0;
 };
 
-DepthStencilState EnableDepth
-{
-	DepthEnable = TRUE;
-	DepthWriteMask = ALL;
-};
-
 RasterizerState FrontCulling
 {
 	CullMode = NONE;
@@ -27,14 +21,9 @@ RasterizerState FrontCulling
 
 BlendState EnableBlending
 {
-    BlendEnable[0] = true;
-    SrcBlend = src_alpha;
-    DestBlend = inv_src_alpha;
-    BlendOp = add;
-    SrcBlendAlpha = zero;
-    DestBlendAlpha = zero;
-    BlendOpAlpha = add;
-    RenderTargetWriteMask[0] = 0x0F;
+    BlendEnable[0] = TRUE;
+    SrcBlend = SRC_ALPHA;
+    DestBlend = INV_SRC_ALPHA;
 };
 
 SamplerState gTextureSampler{
