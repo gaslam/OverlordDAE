@@ -24,7 +24,7 @@
 
 	protected:
 		virtual void Initialize(const GameContext& gameContext) = 0;
-		virtual void UpdateBaseEffectVariables(const SceneContext& sceneContext, RenderTarget* pSource);
+		virtual void UpdateBaseEffectVariables(const SceneContext&, RenderTarget* pSource);
 
 		//Invokes FullScreen Quad DrawCall to Destination RenderTarget (using the given Shader Technique)
 		void DrawPass(const SceneContext& sceneContext, ID3DX11EffectTechnique* pTechnique, RenderTarget* pDestination);
