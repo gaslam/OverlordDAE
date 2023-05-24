@@ -29,7 +29,7 @@ void PickingScene::Update()
 	{
 		if (const auto pPickedObject = m_SceneContext.pCamera->Pick())
 		{
-			RemoveChild(pPickedObject, true);
+			RemoveChild(pPickedObject);
 		}
 	}
 }

@@ -71,6 +71,8 @@ void PostProcessingScene::Initialize()
 	m_pPostGrayscale = MaterialManager::Get()->CreateMaterial<PostGrayscale>();
 	m_pPostBlur = MaterialManager::Get()->CreateMaterial<PostBlur>();
 
+
+
 	AddPostProcessingEffect(m_pPostGrayscale);
 	AddPostProcessingEffect(m_pPostBlur);
 

@@ -2,13 +2,9 @@
 class SceneManager final: public Singleton<SceneManager>
 {
 public:
-	SceneManager(const SceneManager& other) = delete;
-	SceneManager(SceneManager&& other) noexcept = delete;
-	SceneManager& operator=(const SceneManager& other) = delete;
-	SceneManager& operator=(SceneManager&& other) noexcept = delete;
 
 	void AddGameScene(GameScene* pScene);
-	void RemoveGameScene(GameScene* pScene, bool deleteObject = false);
+	void RemoveGameScene(GameScene* pScene);
 	void SetActiveGameScene(const std::wstring& sceneName);
 	void NextScene();
 	void PreviousScene();
@@ -23,7 +19,6 @@ private:
 	friend class OverlordGame;
 	friend class Singleton<SceneManager>;
 	SceneManager() = default;
-	~SceneManager();
 
 	void PostInitialize() const;
 	void WindowStateChanged(int state, bool active) const;
@@ -31,7 +26,7 @@ private:
 	void Draw() const;
 	void OnGUI() const;
 
-	std::vector<GameScene*> m_pScenes{};
+	std::vector<std::unique_ptr<GameScene>> m_pScenes{};
 	GameScene* m_ActiveScene{}, * m_NewActiveScene{};
 };
 

@@ -45,7 +45,7 @@ void GameScene::AddChild_(GameObject* pObject)
 	pObject->RootOnSceneAttach(this);
 }
 
-void GameScene::RemoveChild(GameObject* pObject, bool deleteObject)
+void GameScene::RemoveChild(GameObject* pObject)
 {
 	const auto it = std::ranges::find(m_pChildren, pObject);
 
@@ -60,11 +60,6 @@ void GameScene::RemoveChild(GameObject* pObject, bool deleteObject)
 	m_pChildren.erase(it);
 	pObject->m_pParentScene = nullptr;
 	pObject->RootOnSceneDetach(this);
-
-	if (deleteObject)
-	{
-		SafeDelete(pObject);
-	}		
 }
 
 void GameScene::RootInitialize(const GameContext& gameContext)

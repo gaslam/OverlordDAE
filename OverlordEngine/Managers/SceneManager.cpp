@@ -5,27 +5,26 @@
 
 void SceneManager::Initialize()
 {
-	for (GameScene* pScene : m_pScenes)
+	for (const auto& pScene : m_pScenes)
 	{
 		pScene->RootInitialize(m_GameContext);
 	}
 } 
 
-SceneManager::~SceneManager()
-{
-	for (GameScene* scene : m_pScenes)
-	{
-		SafeDelete(scene);
-	}
-}
-
 void SceneManager::AddGameScene(GameScene* pScene)
 {
-	const auto it = std::ranges::find(m_pScenes, pScene);
+	const auto it = std::find_if(m_pScenes.begin(), m_pScenes.end(),[pScene](std::unique_ptr<GameScene>& pOtherScene)
+	{
+		if(pOtherScene.get() == pScene)
+		{
+			return true;
+		}
+		return false;
+	});
 
 	if (it == m_pScenes.end())
 	{
-		m_pScenes.push_back(pScene);
+		m_pScenes.push_back(std::unique_ptr<GameScene>(pScene));
 
 		if (m_IsInitialized) {
 			pScene->RootInitialize(m_GameContext);
@@ -37,17 +36,20 @@ void SceneManager::AddGameScene(GameScene* pScene)
 	}
 }
 
-void SceneManager::RemoveGameScene(GameScene* pScene, bool deleteObject)
+void SceneManager::RemoveGameScene(GameScene* pScene)
 {
-	const auto it = std::ranges::find(m_pScenes, pScene);
+	const auto it = std::find_if(m_pScenes.begin(), m_pScenes.end(), [pScene](std::unique_ptr<GameScene>& pOtherScene)
+		{
+			if (pOtherScene.get() == pScene)
+			{
+				return true;
+			}
+			return false;
+		});
 
 	if (it != m_pScenes.end())
 	{
 		m_pScenes.erase(it);
-		if (deleteObject)
-		{
-			SafeDelete(pScene);
-		}
 	}
 }
 
@@ -55,10 +57,11 @@ void SceneManager::NextScene()
 {
 	for (unsigned int i = 0; i < m_pScenes.size(); ++i)
 	{
-		if (m_pScenes[i] == m_ActiveScene)
+		GameScene* pScene = m_pScenes[i].get();
+		if (pScene == m_ActiveScene)
 		{
 			const auto nextScene = ++i % m_pScenes.size();
-			m_NewActiveScene = m_pScenes[nextScene];
+			m_NewActiveScene = m_pScenes[nextScene].get();
 			break;
 		}
 	}
@@ -69,11 +72,12 @@ void SceneManager::PreviousScene()
 	const UINT numScenes = static_cast<UINT>(m_pScenes.size());
 	for (UINT i = 0; i < numScenes; ++i)
 	{
-		if (m_pScenes[i] == m_ActiveScene)
+		GameScene* pScene = m_pScenes[i].get();
+		if (pScene == m_ActiveScene)
 		{
 			if (i == 0) i = numScenes;
 			--i;
-			m_NewActiveScene = m_pScenes[i];
+			m_NewActiveScene = m_pScenes[i].get();
 			break;
 		}
 	}
@@ -81,14 +85,14 @@ void SceneManager::PreviousScene()
 
 void SceneManager::SetActiveGameScene(const std::wstring& sceneName)
 {
-	const auto it = std::ranges::find_if(m_pScenes, [sceneName](const GameScene* pScene)
+	const auto it = std::ranges::find_if(m_pScenes, [sceneName](const std::unique_ptr<GameScene>& pScene)
 	{
 		return wcscmp(pScene->m_SceneName.c_str(), sceneName.c_str()) == 0;
 	});
 
 	if (it != m_pScenes.end())
 	{
-		m_NewActiveScene = *it;
+		m_NewActiveScene = it->get();
 	}
 }
 
@@ -102,7 +106,7 @@ void SceneManager::WindowStateChanged(int state, bool active) const
 
 void SceneManager::PostInitialize() const
 {
-	for (GameScene* pScene : m_pScenes)
+	for (const auto& pScene : m_pScenes)
 	{
 		pScene->RootPostInitialize();
 	}

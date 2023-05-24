@@ -13,7 +13,7 @@ public:
 	typedef std::function<void (GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action)> PhysicsCallback;
 
 	GameObject();
-	virtual ~GameObject();
+	virtual ~GameObject() = default;
 	GameObject(const GameObject& other) = delete;
 	GameObject(GameObject&& other) noexcept = delete;
 	GameObject& operator=(const GameObject& other) = delete;
@@ -26,7 +26,7 @@ public:
 		AddChild_(pObject);
 		return pObject;
 	}
-	void RemoveChild(GameObject* obj, bool deleteObject = false);
+	void RemoveChild(GameObject* obj);
 
 	template<typename T>
 	std::enable_if_t<std::is_base_of_v<BaseComponent, T>, T*>
@@ -35,7 +35,7 @@ public:
 		AddComponent_(pComp);
 		return pComp;
 	}
-	void RemoveComponent(BaseComponent* pComponent, bool deleteObject = false);
+	void RemoveComponent(BaseComponent* pComponent);
 	void OnTrigger(GameObject* pTriggerObject, GameObject* pOtherObject, PxTriggerAction action) const;
 
 	const std::wstring& GetTag() const { return m_Tag; }
@@ -59,15 +59,15 @@ public:
 	T* GetComponent(bool searchChildren = false)
 	{
 		const type_info& ti = typeid(T);
-		for (auto* component : m_pComponents)
+		for (const auto& component : m_pComponents)
 		{
-			if (component && typeid(*component) == ti)
-				return static_cast<T*>(component);
+			if (component && typeid(*component.get()) == ti)
+				return dynamic_cast<T*>(component.get());
 		}
 
 		if (searchChildren)
 		{
-			for (auto* child : m_pChildren)
+			for (auto& child : m_pChildren)
 			{
 				if (child->GetComponent<T>(searchChildren) != nullptr)
 					return child->GetComponent<T>(searchChildren);
@@ -83,20 +83,20 @@ public:
 		const type_info& ti = typeid(T);
 		std::vector<T*> components;
 
-		for (auto* component : m_pComponents)
+		for (auto component : m_pComponents)
 		{
 			if (component && typeid(*component) == ti)
-				components.push_back(static_cast<T*>(component));
+				components.push_back(dynamic_cast<T*>(component));
 		}
 
 		if (searchChildren)
 		{
-			for (auto* child : m_pChildren)
+			for (auto child : m_pChildren)
 			{
 				auto childComponents = child->GetComponents<T>(searchChildren);
 
 				for (auto* childComp : childComponents)
-					components.push_back(static_cast<T*>(childComp));
+					components.push_back(dynamic_cast<T*>(childComp));
 			}
 		}
 
@@ -107,10 +107,10 @@ public:
 	T* GetChild()
 	{
 		const type_info& ti = typeid(T);
-		for (auto* child : m_pChildren)
+		for (const auto& child : m_pChildren)
 		{
 			if (child && typeid(*child) == ti)
-				return static_cast<T*>(child);
+				return dynamic_cast<T*>(child.get());
 		}
 		return nullptr;
 	}
@@ -121,10 +121,10 @@ public:
 		const type_info& ti = typeid(T);
 		std::vector<T*> children;
 
-		for (auto* child : m_pChildren)
+		for (const auto& child : m_pChildren)
 		{
 			if (child && typeid(*child) == ti)
-				children.push_back(static_cast<T*>(child));
+				children.push_back(dynamic_cast<T*>(child.get()));
 		}
 		return children;
 	}
@@ -156,8 +156,8 @@ private:
 	void AddChild_(GameObject* pObject);
 	void AddComponent_(BaseComponent* pComponent);
 
-	std::vector<GameObject*> m_pChildren{};
-	std::vector<BaseComponent*> m_pComponents{};
+	std::vector<std::unique_ptr<GameObject>> m_pChildren{};
+	std::vector<std::unique_ptr<BaseComponent>> m_pComponents{};
 
 	bool m_IsInitialized{}, m_IsActive{};
 	GameScene* m_pParentScene{};

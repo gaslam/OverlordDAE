@@ -24,7 +24,7 @@ public:
 		return pObject;
 	}
 	void AddChild_(GameObject* pObject);
-	void RemoveChild(GameObject* pObject, bool deleteObject = false);
+	void RemoveChild(GameObject* pObject);
 
 	const SceneContext& GetSceneContext() const { return m_SceneContext; }
 	SceneSettings& GetSceneSettings() { return m_SceneContext.settings; }
@@ -49,6 +49,7 @@ protected:
 	virtual void OnGUI(){}
 	virtual void OnSceneActivated() {}
 	virtual void OnSceneDeactivated() {}
+	virtual void End() {};
 
 	SceneContext m_SceneContext{};
 private:
