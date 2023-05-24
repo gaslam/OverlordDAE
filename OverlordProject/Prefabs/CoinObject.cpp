@@ -10,6 +10,14 @@ CoinObject::CoinObject(const XMFLOAT3& spawnPos,const float scale) : m_Pos(spawn
 {
 }
 
+void CoinObject::MarkForDeletion()
+{
+	 m_MarkForDeletion = true;
+	 auto pRigidComponent = GetComponent<RigidBodyComponent>();
+	auto colliderInfo = pRigidComponent->GetCollider(0);
+	colliderInfo.SetTrigger(false);
+}
+
 void CoinObject::Initialize(const SceneContext&)
 {
 	auto* modelComponentBody = new ModelComponent{ L"Meshes/Objects/Coin.ovm" };
@@ -30,14 +38,16 @@ void CoinObject::Initialize(const SceneContext&)
 
 	auto pRigidBody = AddComponent(new RigidBodyComponent(true));
 	int colliderId = pRigidBody->AddCollider(PxSphereGeometry{ m_Scale * 2.f }, *pPxMaterial);
-	auto colliderInfo = pRigidBody->GetCollider(colliderId);
+	ColliderInfo colliderInfo = pRigidBody->GetCollider(colliderId);
 	colliderInfo.SetTrigger(true);
 
-	SetOnTriggerCallBack([=](GameObject* pTrigger, GameObject* pOther, PxTriggerAction action)
+	SetOnTriggerCallBack([this,colliderInfo](GameObject* pTrigger, GameObject* pOther, PxTriggerAction action)
 		{
-			if (dynamic_cast<Character*>(pOther) && pTrigger == this && action == PxTriggerAction::ENTER)
+
+			if (reinterpret_cast<Character*>(pOther) && action == PxTriggerAction::ENTER)
 			{
-				m_MarkForDeletion = true;
+				const auto object = reinterpret_cast<CoinObject*>(pTrigger);
+				object->MarkForDeletion();
 			}
 		});
 }

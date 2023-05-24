@@ -4,11 +4,13 @@ class CoinObject :
 {
 public:
 	CoinObject(const XMFLOAT3& spawnPos,const float scale);
+	~CoinObject() override = default;
 	CoinObject(const CoinObject& other) = delete;
 	CoinObject(CoinObject&& other) noexcept = delete;
 	CoinObject& operator=(const CoinObject& other) = delete;
 	CoinObject& operator=(CoinObject&& other) noexcept = delete;
 	bool IsMarkedAsDeleted() const { return m_MarkForDeletion; }
+	void MarkForDeletion();
 protected:
 	void Initialize(const SceneContext&) override;
 	void Update(const SceneContext& sceneContext) override;

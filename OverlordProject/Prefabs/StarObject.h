@@ -4,6 +4,7 @@ class StarObject :
 {
 public:
 	StarObject(const XMFLOAT3& spawnPos,const float scale);
+	~StarObject() override = default;
 	StarObject(const StarObject& other) = delete;
 	StarObject(StarObject&& other) noexcept = delete;
 	StarObject& operator=(const StarObject& other) = delete;
