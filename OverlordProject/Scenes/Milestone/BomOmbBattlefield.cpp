@@ -1,13 +1,21 @@
 #include "stdafx.h"
-#include "BanjoTestScene.h"
+#include "BomOmbBattlefield.h"
 #include "Prefabs/ThirdPersonCamera.h"
 #include "ProjectUtils.h"
-#include "Prefabs/StarObject.h"
+#include "Components/CoinComponent.h"
+#include "Components/StarComponent.h"
+#include "Materials/Post/PostBlur.h"
+#include "Materials/Post/PostGrayscale.h"
+#include "Materials/Post/PostPixelate.h"
 #include "Prefabs/Character.h"
-#include "Prefabs/CoinObject.h"
 
-void BanjoTestScene::Initialize()
+void BomOmbBattlefield::Initialize()
 {
+	m_SceneContext.settings.drawGrid = true;
+	m_SceneContext.settings.enableOnGUI = true;
+
+	m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
+
 	const auto pDefaultMaterial = PxGetPhysics().createMaterial(0.5f, 0.5f, 0.5f);
 	GameSceneExt::CreatePhysXGroundPlane(*this, pDefaultMaterial);
 	CharacterDesc characterDesc{ pDefaultMaterial };
@@ -57,9 +65,6 @@ void BanjoTestScene::Initialize()
 
 	ModelUtils::AddTextureToModelComponent(modelComponentFences, L"Textures/Environments/Level_1/Fences/textureData.json");
 
-
-	m_SceneContext.settings.enableOnGUI = true;
-
 	auto& physx = PxGetPhysics();
 	auto physxMat = physx.createMaterial(10.f, 10.f, 0.5f);
 	auto pTriangleMesh = ContentManager::Load<PxTriangleMesh>(L"Meshes/Environments/Level_1.ovpt");
@@ -88,46 +93,28 @@ void BanjoTestScene::Initialize()
 
 	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Level1/1_05 Super_Mario_64_Main_Theme.mp3", FMOD_DEFAULT || FMOD_LOOP_NORMAL, nullptr, &m_pBackgroundMusic);
 	soundManager->ErrorCheck(result);
-	AddStars();
-	AddCoins();
+	AddCollectibles();
+
+	m_Pixelate = MaterialManager::Get()->CreateMaterial<PostPixelate>();
+	const XMFLOAT2 pixels{ 1024.f,576.f};
+	m_Pixelate->SetPixels(pixels);
+	AddPostProcessingEffect(m_Pixelate);
+
+	m_Pixelate->SetIsEnabled(true);
 }
 
-void BanjoTestScene::AddStars()
+void BomOmbBattlefield::AddCollectibles()
 {
-	json jsonData = *ContentManager::Load<json>(L"GameData/Stars.json");
-	const float scale = jsonData["scale"];
-	json positions = jsonData.at("positions");
-
-	size_t positionSize = positions.size();
-	for(size_t i{}; i < positionSize; ++i)
-	{
-		json position = positions.at(i);
-		const XMFLOAT3 pos{ position["x"], position["y"], position["z"] };
-		auto star = new StarObject{ pos ,scale};
-		AddChild(star);
-		m_Stars.emplace_back(star);
-	}
-}
-
-void BanjoTestScene::AddCoins()
-{
-	json jsonData = *ContentManager::Load<json>(L"GameData/Coins.json");
-	const float scale = jsonData["scale"];
-	json positions = jsonData.at("positions");
-
-	size_t positionSize = positions.size();
-	for (size_t i{}; i < positionSize; ++i)
-	{
-		json position = positions.at(i);
-		const XMFLOAT3 pos{ position["x"], position["y"], position["z"] };
-		auto coin = new CoinObject{ pos ,scale };
-		AddChild(coin);
-		m_Coins.emplace_back(coin);
-	}
+	GameObject* starBaseObject = new GameObject();
+	GameObject* coinBaseObject = new GameObject();
+	starBaseObject->AddComponent(new StarComponent{this});
+	coinBaseObject->AddComponent(new CoinComponent{this});
+	AddChild(starBaseObject);
+	AddChild(coinBaseObject);
 }
 
 
-void BanjoTestScene::OnGUI()
+void BomOmbBattlefield::OnGUI()
 {
 	if (m_pPlayableCharacter)
 	{
@@ -136,35 +123,20 @@ void BanjoTestScene::OnGUI()
 		auto inputFlags = ImGuiInputTextFlags_ReadOnly;
 		ImGui::InputFloat3("Position", ConvertUtil::ToImFloatPtr(pTransform->GetPosition()), "%.2f", inputFlags);
 	}
+
+	if(m_Pixelate)
+	{
+		bool isEnabled = m_Pixelate->IsEnabled();
+		ImGui::Checkbox("Grayscale PP", &isEnabled);
+		m_Pixelate->SetIsEnabled(isEnabled);
+	}
 }
 
-void BanjoTestScene::Update()
+void BomOmbBattlefield::Update()
 {
-	constexpr bool markForDeletion{ true };
-	for (size_t i{}; i < m_Stars.size(); ++i)
-	{
-		auto star = m_Stars[i];
-		if (star->IsMarkedAsDeleted())
-		{
-			RemoveChild(star, markForDeletion);
-			m_Stars.erase(m_Stars.begin() + i);
-			--i;
-		}
-	}
-
-	for (size_t i{}; i < m_Coins.size(); ++i)
-	{
-		auto coin = m_Coins[i];
-		if (coin->IsMarkedAsDeleted())
-		{
-			RemoveChild(coin, markForDeletion);
-			m_Coins.erase(m_Coins.begin() + i);
-			--i;
-		}
-	}
 }
 
-void BanjoTestScene::OnSceneActivated()
+void BomOmbBattlefield::OnSceneActivated()
 {
 	const auto soundManager = SoundManager::Get();
 	const auto pFmod = soundManager->GetSystem();
@@ -172,7 +144,7 @@ void BanjoTestScene::OnSceneActivated()
 	soundManager->ErrorCheck(result);
 }
 
-void BanjoTestScene::OnSceneDeactivated()
+void BomOmbBattlefield::OnSceneDeactivated()
 {
 	m_pChannel2D->stop();
 }

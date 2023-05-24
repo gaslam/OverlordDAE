@@ -1,18 +1,19 @@
 #pragma once
 #include <vector>
+class PostPixelate;
 class Character;
 class StarObject;
 class CoinObject;
-class BanjoTestScene :
+class BomOmbBattlefield :
     public GameScene
 {
 public:
-	BanjoTestScene() : GameScene(L"BanjoTestScene") {}
-	~BanjoTestScene() override = default;
-	BanjoTestScene(const BanjoTestScene& other) = delete;
-	BanjoTestScene(BanjoTestScene&& other) noexcept = delete;
-	BanjoTestScene& operator=(const BanjoTestScene& other) = delete;
-	BanjoTestScene& operator=(BanjoTestScene&& other) noexcept = delete;
+	BomOmbBattlefield() : GameScene(L"Bob-omb Battlefield") {}
+	~BomOmbBattlefield() override = default;
+	BomOmbBattlefield(const BomOmbBattlefield& other) = delete;
+	BomOmbBattlefield(BomOmbBattlefield&& other) noexcept = delete;
+	BomOmbBattlefield& operator=(const BomOmbBattlefield& other) = delete;
+	BomOmbBattlefield& operator=(BomOmbBattlefield&& other) noexcept = delete;
 
 protected:
 	void Initialize() override;
@@ -35,10 +36,7 @@ private:
 		reset
 	};
 
-	void AddStars();
-	void AddCoins();
-
-	std::vector<StarObject*> m_Stars{};
-	std::vector<CoinObject*> m_Coins{};
+	void AddCollectibles();
+	PostPixelate* m_Pixelate{ nullptr };
 };
 

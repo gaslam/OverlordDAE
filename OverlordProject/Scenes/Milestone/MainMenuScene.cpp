@@ -71,7 +71,7 @@ void MainMenuScene::Initialize()
 
 	m_MenuButtons["MainMenu"][0]->SetClickEvent([]()
 		{
-			SceneManager::Get()->SetActiveGameScene(L"BanjoTestScene");
+			SceneManager::Get()->SetActiveGameScene(L"Bob-omb Battlefield");
 		});
 
 	m_MenuButtons["MainMenu"][1]->SetClickEvent([this]()

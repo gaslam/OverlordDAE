@@ -93,6 +93,8 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\CoinComponent.cpp" />
+    <ClCompile Include="Materials\Post\PostPixelate.cpp" />
     <ClCompile Include="Scenes\Milestone\GameOverScene.cpp" />
     <ClCompile Include="Scenes\Milestone\EndMenuScene.cpp" />
     <ClCompile Include="Scenes\Milestone\MainMenuScene.cpp" />
@@ -107,7 +109,7 @@
     <ClCompile Include="Prefabs\CubePrefab.cpp" />
     <ClCompile Include="Prefabs\SpherePrefab.cpp" />
     <ClCompile Include="Prefabs\TorusPrefab.cpp" />
-    <ClCompile Include="Scenes\Milestone\BanjoTestScene.cpp" />
+    <ClCompile Include="Scenes\Milestone\BomOmbBattlefield.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial_Skinned.cpp" />
     <ClCompile Include="Materials\DiffuseMaterial.cpp" />
     <ClCompile Include="Scenes\Week 10\PostProcessingScene.cpp" />
@@ -128,6 +130,7 @@
     <ClCompile Include="Scenes\Week 8\ShadowMappingScene.cpp" />
     <ClCompile Include="Prefabs\StarObject.cpp" />
     <ClCompile Include="Scenes\Week 9\ParticleScene.cpp" />
+    <ClCompile Include="Components\StarComponent.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h</PrecompiledHeaderFile>
@@ -153,6 +156,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\CoinComponent.h" />
+    <ClInclude Include="Materials\Post\PostPixelate.h" />
     <ClInclude Include="Scenes\Milestone\GameOverScene.h" />
     <ClInclude Include="Scenes\Milestone\EndMenuScene.h" />
     <ClInclude Include="Scenes\Milestone\MainMenuScene.h" />
@@ -168,7 +173,7 @@
     <ClInclude Include="Prefabs\SpherePrefab.h" />
     <ClInclude Include="Prefabs\TorusPrefab.h" />
     <ClInclude Include="ProjectUtils.h" />
-    <ClInclude Include="Scenes\Milestone\BanjoTestScene.h" />
+    <ClInclude Include="Scenes\Milestone\BomOmbBattlefield.h" />
     <ClInclude Include="Materials\DiffuseMaterial_Skinned.h" />
     <ClInclude Include="Materials\DiffuseMaterial.h" />
     <ClInclude Include="Scenes\Week 10\PostProcessingScene.h" />
@@ -189,6 +194,7 @@
     <ClInclude Include="Scenes\Week 8\ShadowMappingScene.h" />
     <ClInclude Include="Prefabs\StarObject.h" />
     <ClInclude Include="Scenes\Week 9\ParticleScene.h" />
+    <ClInclude Include="Components\StarComponent.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Scenes\Week 3\W3_PongScene.h" />

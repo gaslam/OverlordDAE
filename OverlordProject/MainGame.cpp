@@ -81,7 +81,7 @@
 
 #ifdef EXAM
 #include "Scenes/Milestone/MainMenuScene.h"
-#include "Scenes/Milestone/BanjoTestScene.h"
+#include "Scenes/Milestone/BomOmbBattlefield.h"
 #include "Scenes/Milestone/EndMenuScene.h"
 #include "Scenes/Milestone/GameOverScene.h"
 #endif
@@ -164,11 +164,12 @@ void MainGame::Initialize()
 #endif
 
 #ifdef EXAM
+	SceneManager::Get()->AddGameScene(new BomOmbBattlefield());
 	SceneManager::Get()->AddGameScene(new MainMenuScene());
 	SceneManager::Get()->AddGameScene(new GameOverScene());
 	SceneManager::Get()->AddGameScene(new EndMenuScene());
 
-	SceneManager::Get()->AddGameScene(new BanjoTestScene());
+
 #endif
 }
 
