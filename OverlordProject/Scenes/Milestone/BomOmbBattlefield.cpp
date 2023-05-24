@@ -4,8 +4,6 @@
 #include "ProjectUtils.h"
 #include "Components/CoinComponent.h"
 #include "Components/StarComponent.h"
-#include "Materials/Post/PostBlur.h"
-#include "Materials/Post/PostGrayscale.h"
 #include "Materials/Post/PostPixelate.h"
 #include "Prefabs/Character.h"
 
@@ -127,7 +125,7 @@ void BomOmbBattlefield::OnGUI()
 	if(m_Pixelate)
 	{
 		bool isEnabled = m_Pixelate->IsEnabled();
-		ImGui::Checkbox("Grayscale PP", &isEnabled);
+		ImGui::Checkbox("Pixelate PP", &isEnabled);
 		m_Pixelate->SetIsEnabled(isEnabled);
 	}
 }
