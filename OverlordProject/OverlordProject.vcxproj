@@ -93,8 +93,10 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\BallComponent.cpp" />
     <ClCompile Include="Components\CoinComponent.cpp" />
     <ClCompile Include="Materials\Post\PostPixelate.cpp" />
+    <ClCompile Include="Prefabs\BallPrefab.cpp" />
     <ClCompile Include="Scenes\Milestone\GameOverScene.cpp" />
     <ClCompile Include="Scenes\Milestone\EndMenuScene.cpp" />
     <ClCompile Include="Scenes\Milestone\MainMenuScene.cpp" />
@@ -156,8 +158,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\BallComponent.h" />
     <ClInclude Include="Components\CoinComponent.h" />
+    <ClInclude Include="Components\SpawnerComponent.h" />
     <ClInclude Include="Materials\Post\PostPixelate.h" />
+    <ClInclude Include="Prefabs\BallPrefab.h" />
     <ClInclude Include="Scenes\Milestone\GameOverScene.h" />
     <ClInclude Include="Scenes\Milestone\EndMenuScene.h" />
     <ClInclude Include="Scenes\Milestone\MainMenuScene.h" />

@@ -45,6 +45,8 @@
     <ClCompile Include="Components\StarComponent.cpp" />
     <ClCompile Include="Components\CoinComponent.cpp" />
     <ClCompile Include="Materials\Post\PostPixelate.cpp" />
+    <ClCompile Include="Components\BallComponent.cpp" />
+    <ClCompile Include="Prefabs\BallPrefab.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -91,5 +93,8 @@
     <ClInclude Include="Components\StarComponent.h" />
     <ClInclude Include="Components\CoinComponent.h" />
     <ClInclude Include="Materials\Post\PostPixelate.h" />
+    <ClInclude Include="Components\BallComponent.h" />
+    <ClInclude Include="Components\SpawnerComponent.h" />
+    <ClInclude Include="Prefabs\BallPrefab.h" />
   </ItemGroup>
 </Project>
