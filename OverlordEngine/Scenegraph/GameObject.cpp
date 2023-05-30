@@ -209,7 +209,7 @@ void GameObject::AddChild_(GameObject* pObject)
 
 void GameObject::RemoveChild(GameObject* obj)
 {
-	const auto it = std::remove_if(m_pChildren.begin(), m_pChildren.end(), [obj](const std::unique_ptr<GameObject>& child)
+	const auto it = std::find_if(m_pChildren.begin(), m_pChildren.end(), [obj](const std::unique_ptr<GameObject>& child)
 		{
 			if(child.get() == obj)
 			{
@@ -226,17 +226,16 @@ void GameObject::RemoveChild(GameObject* obj)
 	}
 #endif
 
-	m_pChildren.erase(it);
-
 	//Reset object parent pointer
 	obj->m_pParentObject = nullptr;
 
 	//Signal object (Parent Detached)
-	obj->OnParentDetach(this);
+	//obj->OnParentDetach(this);
 
 	//Signal object and children if detached from scenegraph (Scene Detached)
 	if(GameScene* pScene = GetScene())
 		obj->RootOnSceneDetach(pScene);
+	m_pChildren.erase(it);
 }
 
 void GameObject::AddComponent_(BaseComponent* pComponent)

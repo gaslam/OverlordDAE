@@ -32,6 +32,10 @@ void StarComponent::RemoveStars()
 {
 	auto it = std::remove_if(m_pStars.begin(), m_pStars.end(), [this](StarObject* object)
 		{
+		if(object->IsFinalStar())
+		{
+			m_pScene->End();
+		}
 			if (object->IsMarkedAsDeleted())
 			{
 				m_pScene->RemoveChild(object);

@@ -83,7 +83,6 @@ void ThirdPersonCamera::Update(const SceneContext& sceneContext)
 					bool test = TriangleTests::Intersects(currPos, backwards, triangleP1, triangleP2, triangleP3, dist);
 					if (test && dist < 10.f && dist < oldDist)
 					{
-						std::cout << "intersection hit. dist: " << dist << "\n";
 						oldDist = dist;
 						if (oldDist < 5.f)
 						{

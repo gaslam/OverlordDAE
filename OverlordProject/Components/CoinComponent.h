@@ -8,7 +8,7 @@ public:
     void Update(const SceneContext& /*sceneContext*/) override;
     void RemoveCoins();
 private:
-    std::vector<CoinObject*> m_pCoins;
+    std::vector<CoinObject*> m_pCoins{};
     GameScene* m_pScene{ nullptr };
 };
 

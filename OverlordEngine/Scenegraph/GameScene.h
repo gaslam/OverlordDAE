@@ -37,6 +37,7 @@ public:
 
 	PhysxProxy* GetPhysxProxy() const { return m_pPhysxProxy; }
 	void SetActiveCamera(CameraComponent* pCameraComponent);
+	virtual void End() {};
 
 protected:
 	virtual void Initialize() = 0;
@@ -49,7 +50,6 @@ protected:
 	virtual void OnGUI(){}
 	virtual void OnSceneActivated() {}
 	virtual void OnSceneDeactivated() {}
-	virtual void End() {};
 
 	SceneContext m_SceneContext{};
 private:
@@ -64,12 +64,12 @@ private:
 	void RootOnGUI();
 	void RootWindowStateChanged(int state, bool active) const;
 
-	std::vector<GameObject*> m_pChildren{};
+	std::vector<std::unique_ptr<GameObject>> m_pChildren{};
 	bool m_IsInitialized{};
 	std::wstring m_SceneName{};
 	CameraComponent* m_pDefaultCamera{}, * m_pActiveCamera{};
 	PhysxProxy* m_pPhysxProxy{};
 
-	std::vector<PostProcessingMaterial*> m_PostProcessingMaterials{};
+	std::vector<std::unique_ptr<PostProcessingMaterial>> m_PostProcessingMaterials{};
 	OverlordGame* m_pGame{};
 };

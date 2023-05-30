@@ -3,14 +3,16 @@
 #include "Prefabs/ThirdPersonCamera.h"
 #include "ProjectUtils.h"
 #include "Components/CoinComponent.h"
+#include "Components/BallComponent.h"
 #include "Components/StarComponent.h"
 #include "Materials/Post/PostPixelate.h"
 #include "Prefabs/Character.h"
 
 void BomOmbBattlefield::Initialize()
 {
-	m_SceneContext.settings.drawGrid = true;
+	m_SceneContext.settings.drawGrid = false;
 	m_SceneContext.settings.enableOnGUI = true;
+	m_SceneContext.settings.drawPhysXDebug = false;
 
 	m_SceneContext.pLights->SetDirectionalLight({ -95.6139526f,66.1346436f,-41.1850471f }, { 0.740129888f, -0.597205281f, 0.309117377f });
 
@@ -41,7 +43,7 @@ void BomOmbBattlefield::Initialize()
 	mario->GetTransform()->Translate(0.f, -characterDesc.controller.height - 0.1f, 0.f);
 	character->SetAnimator(modelCompCharacter->GetAnimator());
 	character->GetTransform()->Scale(1.f, 1.f, 1.f);
-	m_pPlayableCharacter->GetTransform()->Translate(-26.92f, 9.36f, -28.67f);
+	m_pPlayableCharacter->GetTransform()->Translate(-0.12f, 21.79f, 27.71f);
 
 	ModelUtils::AddTextureToModelComponent(modelCompCharacter, L"Textures/Characters/Mario/textureData.json");
 
@@ -92,6 +94,9 @@ void BomOmbBattlefield::Initialize()
 	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Level1/1_05 Super_Mario_64_Main_Theme.mp3", FMOD_DEFAULT || FMOD_LOOP_NORMAL, nullptr, &m_pBackgroundMusic);
 	soundManager->ErrorCheck(result);
 	AddCollectibles();
+	GameObject* ballsObject{ AddChild(new GameObject{}) };
+	XMFLOAT3 pos{ 0,0,0 };
+	ballsObject->AddComponent(new BallComponent{});
 
 	m_Pixelate = MaterialManager::Get()->CreateMaterial<PostPixelate>();
 	const XMFLOAT2 pixels{ 1024.f,576.f};
@@ -116,10 +121,7 @@ void BomOmbBattlefield::OnGUI()
 {
 	if (m_pPlayableCharacter)
 	{
-		const auto pTransform = m_pPlayableCharacter->GetTransform();
-
-		auto inputFlags = ImGuiInputTextFlags_ReadOnly;
-		ImGui::InputFloat3("Position", ConvertUtil::ToImFloatPtr(pTransform->GetPosition()), "%.2f", inputFlags);
+		m_pPlayableCharacter->DrawImGui();
 	}
 
 	if(m_Pixelate)

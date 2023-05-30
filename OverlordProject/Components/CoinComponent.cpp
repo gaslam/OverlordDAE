@@ -30,7 +30,7 @@ void CoinComponent::Update(const SceneContext&)
 
 void CoinComponent::RemoveCoins()
 {
-	auto it = std::remove_if(m_pCoins.begin(), m_pCoins.end(), [this](CoinObject* object)
+	auto it = std::find_if(m_pCoins.begin(), m_pCoins.end(), [this](CoinObject* object)
 	{
 		if(object->IsMarkedAsDeleted())
 		{

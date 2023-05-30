@@ -12,11 +12,6 @@ GameScene::~GameScene()
 	SafeDelete(m_SceneContext.pInput);
 	SafeDelete(m_SceneContext.pLights);
 
-	for (auto pChild : m_pChildren)
-	{
-		SafeDelete(pChild);
-	}
-
 	SafeDelete(m_pPhysxProxy);
 }
 
@@ -41,13 +36,20 @@ void GameScene::AddChild_(GameObject* pObject)
 	}
 #endif
 
-	m_pChildren.push_back(pObject);
+	m_pChildren.push_back(std::unique_ptr<GameObject>(pObject));
 	pObject->RootOnSceneAttach(this);
 }
 
 void GameScene::RemoveChild(GameObject* pObject)
 {
-	const auto it = std::ranges::find(m_pChildren, pObject);
+	const auto it = std::find_if(m_pChildren.begin(),m_pChildren.end(),[pObject](const std::unique_ptr<GameObject>& other)
+	{
+		if(other.get() == pObject)
+		{
+			return true;
+		}
+		return false;
+	});
 
 #if _DEBUG
 	if (it == m_pChildren.end())
@@ -101,7 +103,7 @@ void GameScene::RootInitialize(const GameContext& gameContext)
 	Initialize();
 
 	//Root-Scene Initialize
-	for (const auto pChild : m_pChildren)
+	for (const auto& pChild : m_pChildren)
 	{
 		pChild->RootInitialize(m_SceneContext);
 	}
@@ -112,7 +114,7 @@ void GameScene::RootInitialize(const GameContext& gameContext)
 void GameScene::RootPostInitialize()
 {
 	//Root-Scene Initialize
-	for (const auto pChild : m_pChildren)
+	for (const auto& pChild : m_pChildren)
 	{
 		pChild->RootPostInitialize(m_SceneContext);
 	}
@@ -136,7 +138,7 @@ void GameScene::RootUpdate()
 	Update();
 
 	//Root-Scene Update
-	for (const auto pChild : m_pChildren)
+	for (const auto& pChild : m_pChildren)
 	{
 		pChild->RootUpdate(m_SceneContext);
 	}
@@ -155,7 +157,7 @@ void GameScene::RootDraw()
 		//3. END > ShadowMapRenderer::End (Terminate the ShadowPass)
 		ShadowMapRenderer* pShadowMapRenderer = ShadowMapRenderer::Get();
 	pShadowMapRenderer->Begin(m_SceneContext);
-	for (GameObject* pGameObject : m_pChildren)
+	for (const auto& pGameObject : m_pChildren)
 	{
 		pGameObject->RootShadowMapDraw(m_SceneContext);
 	}
@@ -170,7 +172,7 @@ void GameScene::RootDraw()
 	Draw();
 
 	//Object-Scene Draw
-	for (const auto pChild : m_pChildren)
+	for (const auto& pChild : m_pChildren)
 	{
 		pChild->RootDraw(m_SceneContext);
 	}
@@ -183,7 +185,7 @@ void GameScene::RootDraw()
 
 	//Object-Scene Post-Draw
 	PostDraw();
-	for (const auto pChild : m_pChildren)
+	for (const auto& pChild : m_pChildren)
 	{
 		pChild->RootPostDraw(m_SceneContext);
 	}
@@ -378,7 +380,7 @@ void GameScene::RootWindowStateChanged(int state, bool active) const
 
 void GameScene::AddPostProcessingEffect(PostProcessingMaterial* pMaterial)
 {
-	m_PostProcessingMaterials.push_back(pMaterial);
+	m_PostProcessingMaterials.push_back(std::unique_ptr<PostProcessingMaterial>(pMaterial));
 }
 
 void GameScene::AddPostProcessingEffect(UINT materialId)
@@ -393,8 +395,19 @@ void GameScene::RemovePostProcessingEffect(UINT materialId)
 
 void GameScene::RemovePostProcessingEffect(PostProcessingMaterial* pMaterial)
 {
-	if (std::ranges::find(m_PostProcessingMaterials, pMaterial) != m_PostProcessingMaterials.end())
-		m_PostProcessingMaterials.erase(std::ranges::remove(m_PostProcessingMaterials, pMaterial).begin());
+	const auto it = std::find_if(m_PostProcessingMaterials.begin(), m_PostProcessingMaterials.end(), 
+		[pMaterial](const std::unique_ptr<PostProcessingMaterial>& other)
+		{
+			if(other.get() == pMaterial)
+			{
+				return true;
+			}
+			return false;
+		});
+	if ( it!= m_PostProcessingMaterials.end())
+	{
+		m_PostProcessingMaterials.erase(it);
+	}
 }
  
 void GameScene::SetActiveCamera(CameraComponent* pCameraComponent)
