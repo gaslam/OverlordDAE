@@ -14,12 +14,13 @@ void StarComponent::Initialize(const SceneContext&)
 	json positions = jsonData.at("positions");
 
 	const size_t totalStars = positions.size();
+	GameObject* gameObject = GetGameObject();
 	for (size_t i{}; i < totalStars; ++i)
 	{
 		nlohmann::json position = positions.at(i);
 		const XMFLOAT3 pos{ position["x"], position["y"], position["z"] };
 		auto star = m_pStars.emplace_back(new StarObject{ pos ,scale });
-		m_pScene->AddChild(star);
+		gameObject->AddChild(star);
 	}
 }
 
@@ -32,13 +33,14 @@ void StarComponent::RemoveStars()
 {
 	auto it = std::remove_if(m_pStars.begin(), m_pStars.end(), [this](StarObject* object)
 		{
-		if(object->IsFinalStar())
-		{
-			m_pScene->End();
-		}
 			if (object->IsMarkedAsDeleted())
 			{
-				m_pScene->RemoveChild(object);
+				if (object->IsFinalStar())
+				{
+					m_pScene->End();
+				}
+				GameObject* gameObject = GetGameObject();
+				gameObject->RemoveChild(object);
 				return true;
 			}
 			return false;

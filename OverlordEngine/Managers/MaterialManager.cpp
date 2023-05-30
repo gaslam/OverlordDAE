@@ -3,19 +3,8 @@
 
 MaterialManager::~MaterialManager()
 {
-	//Delete Model Materials
-	for(auto& pMaterial:m_Materials)
-	{
-		SafeDelete(pMaterial);
-	}
 
 	m_Materials.clear();
-
-	//Delete PostProcessing Materials
-	for (auto& pMaterial : m_MaterialsPP)
-	{
-		SafeDelete(pMaterial);
-	}
 
 	m_MaterialsPP.clear();
 }
@@ -27,7 +16,7 @@ BaseMaterial* MaterialManager::GetMaterial(UINT materialId) const
 	{
 		if (materialId < m_Materials.size())
 		{
-			pBase = m_Materials[materialId];
+			pBase = m_Materials[materialId].get();
 			return pBase;
 		}
 	}
@@ -48,7 +37,7 @@ PostProcessingMaterial* MaterialManager::GetMaterial_Post(UINT materialId) const
 		materialId = FromPPID(materialId);
 		if (materialId < m_MaterialsPP.size())
 		{
-			pBase = m_MaterialsPP[materialId];
+			pBase = m_MaterialsPP[materialId].get();
 			return pBase;
 		}
 	}
@@ -82,9 +71,8 @@ void MaterialManager::RemoveMaterial(UINT materialId, bool deleteObj)
 
 		if (deleteObj)
 		{
-			delete m_Materials[materialId];
+			m_Materials[materialId].reset();
 		}
-
 		m_Materials[materialId] = nullptr;
 	}
 	else
@@ -100,7 +88,7 @@ void MaterialManager::RemoveMaterial(UINT materialId, bool deleteObj)
 
 		if (deleteObj)
 		{
-			delete m_MaterialsPP[materialId];
+			m_MaterialsPP[materialId].reset();
 		}
 
 		m_MaterialsPP[materialId] = nullptr;
@@ -117,7 +105,7 @@ void MaterialManager::RemoveMaterial(BaseMaterial* pMaterial, bool deleteObj)
 		return;
 	}
 
-	if(m_Materials[materialId] == pMaterial)
+	if(m_Materials[materialId].get() == pMaterial)
 	{
 		RemoveMaterial(materialId, deleteObj);
 	}
@@ -132,7 +120,7 @@ void MaterialManager::RemoveMaterial(PostProcessingMaterial* pMaterial, bool del
 		return;
 	}
 
-	if (m_MaterialsPP[materialId] == pMaterial)
+	if (m_MaterialsPP[materialId].get() == pMaterial)
 	{
 		RemoveMaterial(materialId, deleteObj);
 	}

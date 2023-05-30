@@ -70,6 +70,6 @@ private:
 	CameraComponent* m_pDefaultCamera{}, * m_pActiveCamera{};
 	PhysxProxy* m_pPhysxProxy{};
 
-	std::vector<std::unique_ptr<PostProcessingMaterial>> m_PostProcessingMaterials{};
+	std::vector<PostProcessingMaterial*> m_PostProcessingMaterials{};
 	OverlordGame* m_pGame{};
 };

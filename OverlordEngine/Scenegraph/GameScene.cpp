@@ -380,7 +380,7 @@ void GameScene::RootWindowStateChanged(int state, bool active) const
 
 void GameScene::AddPostProcessingEffect(PostProcessingMaterial* pMaterial)
 {
-	m_PostProcessingMaterials.push_back(std::unique_ptr<PostProcessingMaterial>(pMaterial));
+	m_PostProcessingMaterials.push_back(pMaterial);
 }
 
 void GameScene::AddPostProcessingEffect(UINT materialId)
@@ -396,9 +396,9 @@ void GameScene::RemovePostProcessingEffect(UINT materialId)
 void GameScene::RemovePostProcessingEffect(PostProcessingMaterial* pMaterial)
 {
 	const auto it = std::find_if(m_PostProcessingMaterials.begin(), m_PostProcessingMaterials.end(), 
-		[pMaterial](const std::unique_ptr<PostProcessingMaterial>& other)
+		[pMaterial](PostProcessingMaterial* other)
 		{
-			if(other.get() == pMaterial)
+			if(other == pMaterial)
 			{
 				return true;
 			}

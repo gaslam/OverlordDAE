@@ -2,9 +2,6 @@
 #include "Misc/json.hpp"
 #include "Prefabs/BallPrefab.h"
 
-class CubePrefab;
-class SpherePrefab;
-
 using json = nlohmann::json;
 
 class BallComponent :
@@ -23,7 +20,7 @@ private:
         XMFLOAT3 dir;
         float force;
     };
-    std::vector<std::unique_ptr<BallPrefab>> m_pSpheres{};
+    std::vector<BallPrefab*> m_pSpheres{};
     std::vector<std::unique_ptr<DirPusher>> m_pDirGuides{};
     float m_MaxSpeed{};
     float m_Radius{};

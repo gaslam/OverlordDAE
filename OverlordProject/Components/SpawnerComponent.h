@@ -4,14 +4,20 @@ class SpawnerComponent :
 	public BaseComponent
 {
 public:
-	SpawnerComponent(XMFLOAT3& pos, GameObject* pOwner) : m_pOwner{pOwner}, m_Pos{pos}
+	SpawnerComponent(XMFLOAT3& pos) : m_Pos{pos}
 	{
+	}
+
+	~SpawnerComponent()
+	{
+		
 	}
 
 	void Initialize(const SceneContext&) override
 	{
 		const bool isBaseOf = std::is_base_of_v<BaseComponent, T> == true;
 		ASSERT_IF(!isBaseOf, L"Component is not member of BaseComponent!!");
+		m_pOwner = GetGameObject();
 		m_pComponent = m_pOwner->AddComponent(new T{});
 		m_pTransform = m_pOwner->GetTransform();
 		m_pTransform->Translate(m_Pos);

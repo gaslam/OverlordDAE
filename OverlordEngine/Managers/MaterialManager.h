@@ -49,8 +49,8 @@ private:
 	static UINT ToPPID(UINT id) { return id + MATERIAL_PP_ID_OFFSET; }
 	PostProcessingMaterial* GetMaterial_Post(UINT materialId) const;
 
-	std::vector<BaseMaterial*> m_Materials{};
-	std::vector<PostProcessingMaterial*> m_MaterialsPP{};
+	std::vector<std::unique_ptr<BaseMaterial>> m_Materials{};
+	std::vector<std::unique_ptr<PostProcessingMaterial>> m_MaterialsPP{};
 };
 
 template <typename T>
@@ -72,9 +72,9 @@ MaterialManager::CreateMaterial()
 	if (newMaterialId == UINT_MAX)
 	{
 		newMaterialId = UINT(m_Materials.size());
-		m_Materials.push_back(pMaterial);
+		m_Materials.push_back(std::unique_ptr<BaseMaterial>(pMaterial));
 	}
-	else m_Materials[newMaterialId] = pMaterial;
+	else m_Materials[newMaterialId] = std::unique_ptr<BaseMaterial>(pMaterial);
 
 	pMaterial->SetMaterialName(StringUtil::utf8_decode(typeid(T).name()));
 	pMaterial->Initialize(m_GameContext.d3dContext, newMaterialId);
@@ -101,9 +101,9 @@ MaterialManager::CreateMaterial()
 	if (newMaterialId == UINT_MAX)
 	{
 		newMaterialId = UINT(m_MaterialsPP.size());
-		m_MaterialsPP.push_back(pMaterial);
+		m_MaterialsPP.push_back(std::unique_ptr<PostProcessingMaterial>(pMaterial));
 	}
-	else m_MaterialsPP[newMaterialId] = pMaterial;
+	else m_MaterialsPP[newMaterialId] = std::unique_ptr<PostProcessingMaterial>(pMaterial);
 
 	pMaterial->InitializeBase(m_GameContext, ToPPID(newMaterialId)); //Todo: Fix Virtual Overload Initialize
 
