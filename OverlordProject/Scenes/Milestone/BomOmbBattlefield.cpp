@@ -4,9 +4,40 @@
 #include "ProjectUtils.h"
 #include "Components/CoinComponent.h"
 #include "Components/BallComponent.h"
+#include "Components/SpawnerComponent.h"
 #include "Components/StarComponent.h"
 #include "Materials/Post/PostPixelate.h"
 #include "Prefabs/Character.h"
+
+FMOD_RESULT F_CALLBACK channelEndCallback(FMOD_CHANNELCONTROL*, FMOD_CHANNELCONTROL_TYPE, FMOD_CHANNELCONTROL_CALLBACK_TYPE callbackType,void*,void*)
+{
+	if (callbackType == FMOD_CHANNELCONTROL_CALLBACK_END)
+	{
+
+		// Trigger your event or perform other actions
+		auto sceneManager = SceneManager::Get();
+		sceneManager->SetActiveGameScene(L"GameOverScene");
+	}
+
+	return FMOD_OK;
+}
+
+void BomOmbBattlefield::End()
+{
+ 	bool isPlaying{};
+	m_pChannel2D->isPlaying(&isPlaying);
+	if(isPlaying)
+	{
+		m_pChannel2D->stop();
+	}
+	const auto soundManager = SoundManager::Get();
+	const auto pFmod = soundManager->GetSystem();
+	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Level1/1-25 Course Clear.mp3", FMOD_DEFAULT || FMOD_LOOP_NORMAL, nullptr, &m_pBackgroundMusic);
+	soundManager->ErrorCheck(result);
+	pFmod->playSound(m_pBackgroundMusic, nullptr, false, &m_pChannel2D);
+
+	m_pChannel2D->setCallback(channelEndCallback);
+}
 
 void BomOmbBattlefield::Initialize()
 {
@@ -94,7 +125,8 @@ void BomOmbBattlefield::Initialize()
 	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Level1/1_05 Super_Mario_64_Main_Theme.mp3", FMOD_DEFAULT || FMOD_LOOP_NORMAL, nullptr, &m_pBackgroundMusic);
 	soundManager->ErrorCheck(result);
 	AddCollectibles();
-	GameObject* ballsObject{ AddChild(new GameObject{}) };
+	XMFLOAT3 spawnerPos{ 0,0,0 };
+	GameObject* ballsObject{ AddChild(new GameObject() )};
 	XMFLOAT3 pos{ 0,0,0 };
 	ballsObject->AddComponent(new BallComponent{});
 
@@ -110,7 +142,7 @@ void BomOmbBattlefield::AddCollectibles()
 {
 	GameObject* starBaseObject = new GameObject();
 	GameObject* coinBaseObject = new GameObject();
-	starBaseObject->AddComponent(new StarComponent{this});
+	starBaseObject->AddComponent(new StarComponent{});
 	coinBaseObject->AddComponent(new CoinComponent{this});
 	AddChild(starBaseObject);
 	AddChild(coinBaseObject);

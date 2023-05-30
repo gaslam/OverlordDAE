@@ -25,7 +25,6 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	result = pSoundSystem->createSound("Resources/Sounds/Mario/sm64_mario_hoohoo.wav", FMOD_DEFAULT, nullptr, &m_pWooHooSound);
 	soundManager->ErrorCheck(result);
 	m_pChannel3D->set3DMinMaxDistance(0.f, 100.f);
-	pSoundSystem->playSound(m_pWooHooSound, nullptr, false, &m_pChannel3D);
 }
 
 inline FMOD_VECTOR ToFmod(XMFLOAT3 v)
@@ -190,7 +189,6 @@ void Character::Update(const SceneContext& sceneContext)
 		m_pChannel3D->isPlaying(&isPlaying);
 		if (isPlaying)m_pChannel3D->stop();
 		soundManager->playSound(soundToPlay, nullptr, false, &m_pChannel3D);
-		m_pChannel3D->setCallback(channelEndCallback);
 		++m_TimesJumped;
 	}
 

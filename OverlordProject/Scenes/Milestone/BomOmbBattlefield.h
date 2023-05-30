@@ -15,6 +15,7 @@ public:
 	BomOmbBattlefield& operator=(const BomOmbBattlefield& other) = delete;
 	BomOmbBattlefield& operator=(BomOmbBattlefield&& other) noexcept = delete;
 
+	void End() override;
 protected:
 	void Initialize() override;
 	void OnGUI() override;
