@@ -133,7 +133,7 @@ void BomOmbBattlefield::Initialize()
 	m_Pixelate = MaterialManager::Get()->CreateMaterial<PostPixelate>();
 	const XMFLOAT2 pixels{ 1024.f,576.f};
 	m_Pixelate->SetPixels(pixels);
-	//AddPostProcessingEffect(m_Pixelate);
+	AddPostProcessingEffect(m_Pixelate);
 
 	m_Pixelate->SetIsEnabled(true);
 }
@@ -143,7 +143,7 @@ void BomOmbBattlefield::AddCollectibles()
 	GameObject* starBaseObject = new GameObject();
 	GameObject* coinBaseObject = new GameObject();
 	m_pStarComponent = starBaseObject->AddComponent(new StarComponent{});
-	coinBaseObject->AddComponent(new CoinComponent{this});
+	m_pCoinComponent = coinBaseObject->AddComponent(new CoinComponent{});
 	AddChild(starBaseObject);
 	AddChild(coinBaseObject);
 }
@@ -166,6 +166,11 @@ void BomOmbBattlefield::OnGUI()
 	if(m_pStarComponent)
 	{
 		m_pStarComponent->OnGUI();
+	}
+
+	if (m_pCoinComponent)
+	{
+		m_pCoinComponent->OnGUI();
 	}
 }
 

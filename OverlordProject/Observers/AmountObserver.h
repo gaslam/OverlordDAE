@@ -2,10 +2,19 @@
 #include "Observer/Observer.h"
 
 class Event;
-class AmountObserver : public Observer
+class AmountObserverStars : public Observer
 {
 public:
-	AmountObserver() = default;
+	AmountObserverStars() = default;
+	void OnNotify(GameObject* object, Event& event) override;
+private:
+	void SetText(GameObject* object);
+};
+
+class AmountObserverCoins : public Observer
+{
+public:
+	AmountObserverCoins() = default;
 	void OnNotify(GameObject* object, Event& event) override;
 private:
 	void SetText(GameObject* object);

@@ -1,14 +1,19 @@
 #pragma once
+#include "Observers/AmountObserver.h"
 class CoinObject;
 class CoinComponent : public BaseComponent
 {
 public:
-    explicit CoinComponent(GameScene* scene) : m_pScene{ scene } {};
+    explicit CoinComponent() {};
     void Initialize(const SceneContext& sceneContext) override;
     void Update(const SceneContext& /*sceneContext*/) override;
     void RemoveCoins();
+    int GetCoinsCount() const { return m_CoinsCollected; }
+    void OnGUI();
 private:
+    int m_CoinsCollected{};
+    GameObject* m_NumberDisplayObject{};
     std::vector<CoinObject*> m_pCoins{};
-    GameScene* m_pScene{ nullptr };
+    std::unique_ptr<AmountObserverCoins> m_AmountObserver{};
 };
 

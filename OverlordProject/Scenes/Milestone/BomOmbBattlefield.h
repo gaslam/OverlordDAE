@@ -5,6 +5,7 @@ class Character;
 class StarObject;
 class CoinObject;
 class StarComponent;
+class CoinComponent;
 class BomOmbBattlefield :
     public GameScene
 {
@@ -26,6 +27,7 @@ protected:
 private:
 	Character* m_pPlayableCharacter{ nullptr };
 	StarComponent* m_pStarComponent{ nullptr };
+	CoinComponent* m_pCoinComponent{ nullptr };
 	FMOD::Channel* m_pChannel2D{ nullptr };
 	FMOD::Sound* m_pBackgroundMusic{ nullptr };
 

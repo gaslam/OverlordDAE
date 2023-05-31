@@ -32,7 +32,7 @@ void StarComponent::Initialize(const SceneContext&)
 	pComp->SetTextPosition(textPos);
 	pComp->SetIconPosition(iconPos);
 	pComp->SetIconScale(iconScale);
-	m_AmountObserver = std::make_unique<AmountObserver>();
+	m_AmountObserver = std::make_unique<AmountObserverStars>();
 	Event eventType = Event(EventType::NUMBER_CHANGED);
 	m_AmountObserver->OnNotify(gameObject, eventType);
 }
@@ -72,8 +72,7 @@ void StarComponent::RemoveStars()
 
 void StarComponent::OnGUI()
 {
-	GameObject* object{ GetGameObject() };
-	auto pComp = object->GetComponent<NumberDisplayComponent>();
+	auto pComp = m_NumberDisplayObject->GetComponent<NumberDisplayComponent>();
 	if(ImGui::CollapsingHeader("Stars UI") && pComp)
 	{
 		pComp->DrawImGUI();

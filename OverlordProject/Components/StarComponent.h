@@ -16,5 +16,5 @@ private:
     int m_StarsCollected{};
     GameObject* m_NumberDisplayObject{};
     std::vector<StarObject*> m_pStars{};
-    std::unique_ptr<AmountObserver> m_AmountObserver{};
+    std::unique_ptr<AmountObserverStars> m_AmountObserver{};
 };	
