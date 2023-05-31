@@ -47,6 +47,7 @@
     <ClCompile Include="Materials\Post\PostPixelate.cpp" />
     <ClCompile Include="Components\BallComponent.cpp" />
     <ClCompile Include="Prefabs\BallPrefab.cpp" />
+    <ClCompile Include="Observers\AmountObserver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -96,5 +97,7 @@
     <ClInclude Include="Components\BallComponent.h" />
     <ClInclude Include="Components\SpawnerComponent.h" />
     <ClInclude Include="Prefabs\BallPrefab.h" />
+    <ClInclude Include="Observer\Observer.h" />
+    <ClInclude Include="Observers\AmountObserver.h" />
   </ItemGroup>
 </Project>

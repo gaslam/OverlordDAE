@@ -4,6 +4,7 @@ class PostPixelate;
 class Character;
 class StarObject;
 class CoinObject;
+class StarComponent;
 class BomOmbBattlefield :
     public GameScene
 {
@@ -24,6 +25,7 @@ protected:
 	void OnSceneDeactivated() override;
 private:
 	Character* m_pPlayableCharacter{ nullptr };
+	StarComponent* m_pStarComponent{ nullptr };
 	FMOD::Channel* m_pChannel2D{ nullptr };
 	FMOD::Sound* m_pBackgroundMusic{ nullptr };
 

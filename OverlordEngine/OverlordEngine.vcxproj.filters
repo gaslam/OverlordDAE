@@ -58,6 +58,7 @@
     <ClCompile Include="Content\JsonLoader.cpp" />
     <ClCompile Include="Misc\ParticleMaterial.cpp" />
     <ClCompile Include="Components\ButtonComponent.cpp" />
+    <ClCompile Include="Components\NumberDisplayComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -128,5 +129,8 @@
     <ClInclude Include="Misc\json.hpp" />
     <ClInclude Include="Misc\ParticleMaterial.h" />
     <ClInclude Include="Components\ButtonComponent.h" />
+    <ClInclude Include="Components\NumberDisplayComponent.h" />
+    <ClInclude Include="Observer\Observer.h" />
+    <ClInclude Include="Observer\Event.h" />
   </ItemGroup>
 </Project>

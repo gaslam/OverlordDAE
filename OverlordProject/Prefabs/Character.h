@@ -1,4 +1,6 @@
 #pragma once
+class NumberDisplayComponent;
+
 struct CharacterDesc
 {
 	CharacterDesc(

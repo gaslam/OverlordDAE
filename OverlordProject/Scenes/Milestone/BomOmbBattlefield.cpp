@@ -133,7 +133,7 @@ void BomOmbBattlefield::Initialize()
 	m_Pixelate = MaterialManager::Get()->CreateMaterial<PostPixelate>();
 	const XMFLOAT2 pixels{ 1024.f,576.f};
 	m_Pixelate->SetPixels(pixels);
-	AddPostProcessingEffect(m_Pixelate);
+	//AddPostProcessingEffect(m_Pixelate);
 
 	m_Pixelate->SetIsEnabled(true);
 }
@@ -142,7 +142,7 @@ void BomOmbBattlefield::AddCollectibles()
 {
 	GameObject* starBaseObject = new GameObject();
 	GameObject* coinBaseObject = new GameObject();
-	starBaseObject->AddComponent(new StarComponent{});
+	m_pStarComponent = starBaseObject->AddComponent(new StarComponent{});
 	coinBaseObject->AddComponent(new CoinComponent{this});
 	AddChild(starBaseObject);
 	AddChild(coinBaseObject);
@@ -161,6 +161,11 @@ void BomOmbBattlefield::OnGUI()
 		bool isEnabled = m_Pixelate->IsEnabled();
 		ImGui::Checkbox("Pixelate PP", &isEnabled);
 		m_Pixelate->SetIsEnabled(isEnabled);
+	}
+
+	if(m_pStarComponent)
+	{
+		m_pStarComponent->OnGUI();
 	}
 }
 

@@ -3,6 +3,7 @@
 
 #include "Prefabs/Character.h"
 #include "ProjectUtils.h"
+#include "Components/NumberDisplayComponent.h"
 
 StarObject::StarObject(const XMFLOAT3& spawnPos,const float scale) : m_Pos(spawnPos), m_Scale(scale)
 {
@@ -45,6 +46,7 @@ void StarObject::Initialize(const SceneContext&)
 				m_MarkForDeletion = true;
 			}
 		});
+
 }
 
 void StarObject::Update(const SceneContext& sceneContext)

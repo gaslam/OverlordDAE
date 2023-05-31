@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Character.h"
+
 #include "Prefabs/ThirdPersonCamera.h"
 
 Character::Character(const CharacterDesc& characterDesc) :

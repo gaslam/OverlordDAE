@@ -116,6 +116,9 @@
     <ClInclude Include="Misc\ParticleMaterial.h" />
     <ClInclude Include="Misc\PostProcessingMaterial.h" />
     <ClInclude Include="Misc\ShadowMapMaterial.h" />
+    <ClInclude Include="Components\NumberDisplayComponent.h" />
+    <ClInclude Include="Observer\Event.h" />
+    <ClInclude Include="Observer\Observer.h" />
     <ClInclude Include="Prefabs\FixedCamera.h" />
     <ClInclude Include="Prefabs\FreeCamera.h" />
     <ClInclude Include="StaticCamera.h" />
@@ -189,6 +192,7 @@
     <ClCompile Include="Misc\ParticleMaterial.cpp" />
     <ClCompile Include="Misc\PostProcessingMaterial.cpp" />
     <ClCompile Include="Misc\ShadowMapMaterial.cpp" />
+    <ClCompile Include="Components\NumberDisplayComponent.cpp" />
     <ClCompile Include="Prefabs\FixedCamera.cpp" />
     <ClCompile Include="Prefabs\FreeCamera.cpp" />
     <ClCompile Include="StaticCamera.cpp" />
