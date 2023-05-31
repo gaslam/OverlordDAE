@@ -10,7 +10,6 @@ public:
 	StarObject& operator=(const StarObject& other) = delete;
 	StarObject& operator=(StarObject&& other) noexcept = delete;
 	bool IsMarkedAsDeleted() const { return m_MarkForDeletion; }
-	bool IsFinalStar() const { return m_IsFinalStar; };
 protected:
 	void Initialize(const SceneContext&) override;
 	void Update(const SceneContext& sceneContext) override;
@@ -21,6 +20,5 @@ private:
 
 	float m_RotationSpeed{ 100.f };
 	float m_TotalYaw{};
-	bool m_IsFinalStar{true};
 };
 

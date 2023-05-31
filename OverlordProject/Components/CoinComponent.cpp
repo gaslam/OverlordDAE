@@ -12,19 +12,8 @@ using json = nlohmann::json;
 
 void CoinComponent::Initialize(const SceneContext&)
 {
-	json jsonData = *ContentManager::Load<json>(L"GameData/Coins.json");
-	const float scale = jsonData["scale"];
-	json positions = jsonData.at("positions");
+	m_AmountObserver = std::make_unique<AmountObserverCoins>();
 	GameObject* gameObject = GetGameObject();
-	const size_t totalStars = positions.size();
-	for (size_t i{}; i < totalStars; ++i)
-	{
-		nlohmann::json position = positions.at(i);
-		const XMFLOAT3 pos{ position["x"], position["y"], position["z"] };
-		auto coin = m_pCoins.emplace_back(new CoinObject{ pos ,scale });
-		gameObject->AddChild(coin);
-	}
-
 	m_NumberDisplayObject = gameObject->AddChild(new GameObject{});
 	auto pComp = m_NumberDisplayObject->AddComponent(new NumberDisplayComponent{ L"Textures/UI/Coin_UI.png" });
 	XMFLOAT2 textPos{ 600.f,13.33f };
@@ -33,9 +22,9 @@ void CoinComponent::Initialize(const SceneContext&)
 	pComp->SetTextPosition(textPos);
 	pComp->SetIconPosition(iconPos);
 	pComp->SetIconScale(iconScale);
-	m_AmountObserver = std::make_unique<AmountObserverCoins>();
 	Event eventType = Event(EventType::NUMBER_CHANGED);
 	m_AmountObserver->OnNotify(gameObject, eventType);
+	AddObjects();
 }
 
 void CoinComponent::Update(const SceneContext&)
@@ -73,5 +62,35 @@ void CoinComponent::OnGUI()
 	if (ImGui::CollapsingHeader("Coins UI") && pComp)
 	{
 		pComp->DrawImGUI();
+	}
+}
+
+void CoinComponent::InitObjects()
+{
+	GameObject* gameObject = GetGameObject();
+	for (auto star : m_pCoins)
+	{
+		gameObject->RemoveChild(star);
+	}
+	m_pCoins.clear();
+	m_CoinsCollected = 0;
+	Event eventType = Event(EventType::NUMBER_CHANGED);
+	m_AmountObserver->OnNotify(gameObject, eventType);
+	AddObjects();
+}
+
+void CoinComponent::AddObjects()
+{
+	json jsonData = *ContentManager::Load<json>(L"GameData/Coins.json");
+	const float scale = jsonData["scale"];
+	json positions = jsonData.at("positions");
+	GameObject* gameObject = GetGameObject();
+	const size_t totalStars = positions.size();
+	for (size_t i{}; i < totalStars; ++i)
+	{
+		nlohmann::json position = positions.at(i);
+		const XMFLOAT3 pos{ position["x"], position["y"], position["z"] };
+		auto coin = m_pCoins.emplace_back(new CoinObject{ pos ,scale });
+		gameObject->AddChild(coin);
 	}
 }

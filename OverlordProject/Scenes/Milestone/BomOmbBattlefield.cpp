@@ -4,8 +4,8 @@
 #include "ProjectUtils.h"
 #include "Components/CoinComponent.h"
 #include "Components/BallComponent.h"
-#include "Components/SpawnerComponent.h"
 #include "Components/StarComponent.h"
+#include "Materials/SkyboxMaterial.h"
 #include "Materials/Post/PostPixelate.h"
 #include "Prefabs/Character.h"
 
@@ -16,7 +16,7 @@ FMOD_RESULT F_CALLBACK channelEndCallback(FMOD_CHANNELCONTROL*, FMOD_CHANNELCONT
 
 		// Trigger your event or perform other actions
 		auto sceneManager = SceneManager::Get();
-		sceneManager->SetActiveGameScene(L"GameOverScene");
+		sceneManager->SetActiveGameScene(L"EndMenuScene");
 	}
 
 	return FMOD_OK;
@@ -73,8 +73,6 @@ void BomOmbBattlefield::Initialize()
 	mario->GetTransform()->Scale(5.f);
 	mario->GetTransform()->Translate(0.f, -characterDesc.controller.height - 0.1f, 0.f);
 	character->SetAnimator(modelCompCharacter->GetAnimator());
-	character->GetTransform()->Scale(1.f, 1.f, 1.f);
-	m_pPlayableCharacter->GetTransform()->Translate(-0.12f, 21.79f, 27.71f);
 
 	ModelUtils::AddTextureToModelComponent(modelCompCharacter, L"Textures/Characters/Mario/textureData.json");
 
@@ -88,13 +86,13 @@ void BomOmbBattlefield::Initialize()
 
 	ModelUtils::AddTextureToModelComponent(modelComponentEnv,L"Textures/Environments/Level_1/Body/textureData.json");
 
-	ModelComponent* modelComponentFences = new ModelComponent{ L"Meshes/Environments/Level_1_Fences.ovm" };
-	auto object2 = new GameObject{};
-	object2->AddComponent<ModelComponent>(modelComponentFences);
-	object->AddChild(object2);
-
-
-	ModelUtils::AddTextureToModelComponent(modelComponentFences, L"Textures/Environments/Level_1/Fences/textureData.json");
+	GameObject* skybox{ object->AddChild(new GameObject{}) };
+	ModelComponent* skyBoxModelComp = skybox->AddComponent(new ModelComponent{ L"Meshes/Shapes/Box.ovm" });
+	skyBoxModelComp->GetTransform()->Scale(100.f, 100.f, 100.f);
+	skyBoxModelComp->GetTransform()->Rotate(0.f, 0.f, 90.f);
+	auto skyboxMat = MaterialManager::Get()->CreateMaterial<SkyboxMaterial>();
+	skyboxMat->SetCubeMapTexture(L"Textures/Environments/Level_1/sky.dds");
+	skyBoxModelComp->SetMaterial(skyboxMat);
 
 	auto& physx = PxGetPhysics();
 	auto physxMat = physx.createMaterial(10.f, 10.f, 0.5f);
@@ -118,16 +116,8 @@ void BomOmbBattlefield::Initialize()
 	inputAction = InputAction(CharacterJump, InputState::pressed, VK_SPACE, -1, XINPUT_GAMEPAD_A);
 	m_SceneContext.pInput->AddInputAction(inputAction);
 
-	auto soundManager = SoundManager::Get();
-	//SOUND 2D
-	auto pFmod = soundManager->GetSystem();
-
-	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Level1/1_05 Super_Mario_64_Main_Theme.mp3", FMOD_DEFAULT || FMOD_LOOP_NORMAL, nullptr, &m_pBackgroundMusic);
-	soundManager->ErrorCheck(result);
 	AddCollectibles();
-	XMFLOAT3 spawnerPos{ 0,0,0 };
 	GameObject* ballsObject{ AddChild(new GameObject() )};
-	XMFLOAT3 pos{ 0,0,0 };
 	ballsObject->AddComponent(new BallComponent{});
 
 	m_Pixelate = MaterialManager::Get()->CreateMaterial<PostPixelate>();
@@ -136,6 +126,14 @@ void BomOmbBattlefield::Initialize()
 	AddPostProcessingEffect(m_Pixelate);
 
 	m_Pixelate->SetIsEnabled(true);
+
+	ModelComponent* modelComponentFences = new ModelComponent{ L"Meshes/Environments/Level_1_Fences.ovm" };
+	auto object2 = new GameObject{};
+	object2->AddComponent<ModelComponent>(modelComponentFences);
+	object->AddChild(object2);
+
+
+	ModelUtils::AddTextureToModelComponent(modelComponentFences, L"Textures/Environments/Level_1/Fences/textureData.json");
 }
 
 void BomOmbBattlefield::AddCollectibles()
@@ -146,6 +144,25 @@ void BomOmbBattlefield::AddCollectibles()
 	m_pCoinComponent = coinBaseObject->AddComponent(new CoinComponent{});
 	AddChild(starBaseObject);
 	AddChild(coinBaseObject);
+}
+
+void BomOmbBattlefield::LoadScene()
+{
+	auto pTransform{ m_pPlayableCharacter->GetTransform() };
+	pTransform->Scale(1.f, 1.f, 1.f);
+	pTransform->Translate(-0.12f, 21.79f, 27.71f);
+
+	auto soundManager = SoundManager::Get();
+	//SOUND 2D
+	auto pFmod = soundManager->GetSystem();
+
+	FMOD_RESULT result = pFmod->createStream("Resources/Sounds/Level1/1_05 Super_Mario_64_Main_Theme.mp3", FMOD_DEFAULT || FMOD_LOOP_NORMAL, nullptr, &m_pBackgroundMusic);
+	soundManager->ErrorCheck(result);
+
+	pFmod->playSound(m_pBackgroundMusic, nullptr, false, &m_pChannel2D);
+
+	m_pStarComponent->InitObjects();
+	m_pCoinComponent->InitObjects();
 }
 
 
@@ -180,10 +197,7 @@ void BomOmbBattlefield::Update()
 
 void BomOmbBattlefield::OnSceneActivated()
 {
-	const auto soundManager = SoundManager::Get();
-	const auto pFmod = soundManager->GetSystem();
-	const FMOD_RESULT result = pFmod->playSound(m_pBackgroundMusic, nullptr, false, &m_pChannel2D);
-	soundManager->ErrorCheck(result);
+	LoadScene();
 }
 
 void BomOmbBattlefield::OnSceneDeactivated()

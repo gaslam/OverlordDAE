@@ -44,6 +44,7 @@ public:
 
 	ParticleEmitterSettings& GetSettings() { return m_EmitterSettings; }; //EmitterSettings Getter (by reference) > allows settings changes
 	void DrawImGui();
+	void SetSettings(ParticleEmitterSettings& settings) { m_EmitterSettings = settings; }
 
 protected:
 	void Initialize(const SceneContext&) override;

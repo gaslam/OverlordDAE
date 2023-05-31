@@ -48,6 +48,7 @@
     <ClCompile Include="Components\BallComponent.cpp" />
     <ClCompile Include="Prefabs\BallPrefab.cpp" />
     <ClCompile Include="Observers\AmountObserver.cpp" />
+    <ClCompile Include="Materials\SkyboxMaterial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -99,5 +100,6 @@
     <ClInclude Include="Prefabs\BallPrefab.h" />
     <ClInclude Include="Observer\Observer.h" />
     <ClInclude Include="Observers\AmountObserver.h" />
+    <ClInclude Include="Materials\SkyboxMaterial.h" />
   </ItemGroup>
 </Project>

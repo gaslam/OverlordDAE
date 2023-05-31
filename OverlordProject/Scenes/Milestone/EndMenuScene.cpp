@@ -63,7 +63,7 @@ void EndMenuScene::Initialize()
 
 	m_MenuButtons["EndMenu"][0]->SetClickEvent([]()
 		{
-			SceneManager::Get()->SetActiveGameScene(L"BanjoTestScene");
+			SceneManager::Get()->SetActiveGameScene(L"Bomb-omb Battlefield");
 		});
 
 	m_MenuButtons["EndMenu"][1]->SetClickEvent([this]()

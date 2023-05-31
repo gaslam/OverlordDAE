@@ -41,7 +41,7 @@ void ParticleScene::Update()
 
 	//Move Particle System
 	auto particlePosition = m_pEmitter->GetTransform()->GetPosition();
-	const auto moveSpeed = 10.f * m_SceneContext.pGameTime->GetElapsed();
+	const auto moveSpeed = 0.f * m_SceneContext.pGameTime->GetElapsed();
 
 	if(m_AutoMove)
 		particlePosition.x += moveSpeed * sin(m_SceneContext.pGameTime->GetTotal());

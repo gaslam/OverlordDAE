@@ -12,9 +12,11 @@ public:
     void RemoveStars();
     int GetStarCount() const { return m_StarsCollected; }
     void OnGUI();
+    void InitObjects();
 private:
     int m_StarsCollected{};
     GameObject* m_NumberDisplayObject{};
     std::vector<StarObject*> m_pStars{};
     std::unique_ptr<AmountObserverStars> m_AmountObserver{};
+    void AddObjects();
 };	

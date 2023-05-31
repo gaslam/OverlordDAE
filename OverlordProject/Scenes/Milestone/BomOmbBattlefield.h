@@ -10,7 +10,7 @@ class BomOmbBattlefield :
     public GameScene
 {
 public:
-	BomOmbBattlefield() : GameScene(L"Bob-omb Battlefield") {}
+	BomOmbBattlefield() : GameScene(L"Bomb-omb Battlefield") {}
 	~BomOmbBattlefield() override = default;
 	BomOmbBattlefield(const BomOmbBattlefield& other) = delete;
 	BomOmbBattlefield(BomOmbBattlefield&& other) noexcept = delete;
@@ -43,5 +43,7 @@ private:
 
 	void AddCollectibles();
 	PostPixelate* m_Pixelate{ nullptr };
+
+	void LoadScene();
 };
 
