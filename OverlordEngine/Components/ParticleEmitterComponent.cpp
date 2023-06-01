@@ -69,7 +69,7 @@ void ParticleEmitterComponent::Update(const SceneContext& sceneContext)
 			UpdateParticle(particle, elapsed);
 		}
 
-		if(!particle.isActive && m_LastParticleSpawn >= particleInterval)
+		if(!particle.isActive && m_LastParticleSpawn >= particleInterval && !m_Disabled)
 		{
 			SpawnParticle(particle);
 			m_LastParticleSpawn -= particleInterval;
@@ -180,5 +180,6 @@ void ParticleEmitterComponent::DrawImGui()
 		ImGui::InputFloatRange("Radius Bounds", &m_EmitterSettings.minEmitterRadius, &m_EmitterSettings.maxEmitterRadius);
 		ImGui::InputFloat3("Velocity", &m_EmitterSettings.velocity.x);
 		ImGui::ColorEdit4("Color", &m_EmitterSettings.color.x, ImGuiColorEditFlags_NoInputs);
+		ImGui::Checkbox("Stop", &m_Disabled);
 	}
 }

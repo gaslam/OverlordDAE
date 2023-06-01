@@ -22,7 +22,7 @@ void ParticleScene::Initialize()
 	settings.color = { 1.f,1.f,1.f, .6f };
 
 	const auto pObject = AddChild(new GameObject);
-	m_pEmitter = pObject->AddComponent(new ParticleEmitterComponent(L"Textures/Smoke.png", settings, 200));
+	m_pEmitter = pObject->AddComponent(new ParticleEmitterComponent(L"Textures/Star_Particle.png", settings, 200));
 
 	//Teapot
 	m_pTeapot = AddChild(new GameObject());
@@ -41,7 +41,7 @@ void ParticleScene::Update()
 
 	//Move Particle System
 	auto particlePosition = m_pEmitter->GetTransform()->GetPosition();
-	const auto moveSpeed = 0.f * m_SceneContext.pGameTime->GetElapsed();
+	const auto moveSpeed = 10.f * m_SceneContext.pGameTime->GetElapsed();
 
 	if(m_AutoMove)
 		particlePosition.x += moveSpeed * sin(m_SceneContext.pGameTime->GetTotal());

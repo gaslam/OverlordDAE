@@ -93,6 +93,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\ParticleComponent.cpp" />
     <ClCompile Include="Observers\AmountObserver.cpp" />
     <ClCompile Include="Components\BallComponent.cpp" />
     <ClCompile Include="Components\CoinComponent.cpp" />
@@ -160,6 +161,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\ParticleComponent.h" />
     <ClInclude Include="Observers\AmountObserver.h" />
     <ClInclude Include="Components\BallComponent.h" />
     <ClInclude Include="Components\CoinComponent.h" />

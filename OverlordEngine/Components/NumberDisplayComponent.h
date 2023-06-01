@@ -20,7 +20,7 @@ public:
     void SetIconPosition(XMFLOAT2& pos)
     {
 	    m_IconPosition = pos;
-        m_pSpriteComponent->GetTransform()->Translate(m_IconPosition.x, m_IconPosition.y, 0.f);
+        m_pSpriteComponent->GetTransform()->Translate(m_IconPosition.x, m_IconPosition.y, 0.9f);
     }
 
     void SetIconScale(XMFLOAT2& scale)

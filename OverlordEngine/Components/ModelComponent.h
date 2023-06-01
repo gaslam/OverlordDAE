@@ -23,6 +23,8 @@ public:
 
 	MeshFilter* GetMeshFilter() const { return m_pMeshFilter; }
 	bool HasMeshFilter() const { return m_pMeshFilter != nullptr; }
+	bool CanDraw() const { return m_CanDraw; }
+	void SetCanDraw(bool canDraw)  { m_CanDraw = canDraw; }
 
 protected:
 	void Initialize(const SceneContext& sceneContext) override;
@@ -44,4 +46,6 @@ private:
 
 	//W9
 	bool m_CastShadows{ true };
+
+	bool m_CanDraw{ true };
 };

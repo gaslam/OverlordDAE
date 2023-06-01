@@ -21,7 +21,6 @@ void StarComponent::Initialize(const SceneContext&)
 	pComp->SetTextPosition(textPos);
 	pComp->SetIconPosition(iconPos);
 	pComp->SetIconScale(iconScale);
-	AddObjects();
 }
 
 void StarComponent::Update(const SceneContext&)
@@ -64,6 +63,16 @@ void StarComponent::OnGUI()
 	if(ImGui::CollapsingHeader("Stars UI") && pComp)
 	{
 		pComp->DrawImGUI();
+	}
+
+	for(int i{}; i < m_pStars.size(); ++i)
+	{
+		int iPlus1{ i + 1 };
+		std::string particleTitle{ "Particle " + std::to_string(iPlus1)};
+		if(ImGui::CollapsingHeader(particleTitle.c_str()))
+		{
+			m_pStars[i]->DrawImGUI();
+		}
 	}
 }
 

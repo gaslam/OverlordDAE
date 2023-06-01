@@ -5,16 +5,17 @@ NumberDisplayComponent::NumberDisplayComponent(const std::wstring& iconPath) : m
 {
 }
 
-void NumberDisplayComponent::Initialize(const SceneContext& sceneContext)
+void NumberDisplayComponent::Initialize(const SceneContext&sceneContext)
 {
 	m_pFont = ContentManager::Load<SpriteFont>(L"Textures/SpriteFonts/MarioAndLuigi_110.fnt");
 	m_Text = std::to_string(m_Number);
 	m_SceneContext = sceneContext;
 	m_TextColor = { 1.f,1.f,1.f,1.f };
 
-	auto gameObject{ GetGameObject() };
-	m_pSpriteComponent = gameObject->AddComponent(new SpriteComponent{ m_IconPath, { 0.5f,0.5f }, m_TextColor });
-	m_pSpriteComponent->GetTransform()->Scale(1.f, 1.f, 1.f);
+	auto gameObject = GetGameObject();
+	m_pSpriteComponent = gameObject->AddComponent(new SpriteComponent(m_IconPath, { 0.5f,0.5f }, { 1.f,1.f,1.f,1.f }));
+
+	m_pSpriteComponent->GetTransform()->Translate(m_SceneContext.windowWidth / 2.f, m_SceneContext.windowHeight / 2.f, .9f);
 }
 
 void NumberDisplayComponent::Update(const SceneContext&)
@@ -36,12 +37,13 @@ void NumberDisplayComponent::DrawImGUI()
 		ImGui::SliderFloat2("Position", &m_TextPosition.x, 0, m_SceneContext.windowWidth);
 		ImGui::ColorEdit4("Color", &m_TextColor.x, ImGuiColorEditFlags_NoInputs);
 	}
-
 	if(ImGui::CollapsingHeader("Sprite"))
 	{
-		ImGui::SliderFloat2("Position", &m_IconPosition.x, 0, m_SceneContext.windowWidth);
-		ImGui::SliderFloat2("Scale", &m_IconScale.x, 0, 3);
+		auto pos = m_pSpriteComponent->GetTransform()->GetPosition();
+		ImGui::SliderFloat2("Position", ConvertUtil::ToImFloatPtr(pos), 0, m_SceneContext.windowWidth);
+		ImGui::SliderFloat2("Scale", ConvertUtil::ToImFloatPtr(m_pSpriteComponent->GetTransform()->GetScale()), 0, 3);
 		ImGui::SliderFloat2("Pivot", ConvertUtil::ToImFloatPtr(m_pSpriteComponent->GetPivot()), 0, 1);
 		ImGui::ColorEdit4("Color", ConvertUtil::ToImFloatPtr(m_pSpriteComponent->GetColor()));
+		m_pSpriteComponent->GetTransform()->Translate(pos);
 	}
 }

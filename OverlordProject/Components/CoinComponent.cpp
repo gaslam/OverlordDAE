@@ -17,8 +17,8 @@ void CoinComponent::Initialize(const SceneContext&)
 	m_NumberDisplayObject = gameObject->AddChild(new GameObject{});
 	auto pComp = m_NumberDisplayObject->AddComponent(new NumberDisplayComponent{ L"Textures/UI/Coin_UI.png" });
 	XMFLOAT2 textPos{ 600.f,13.33f };
-	XMFLOAT2 iconPos{ 540.f,50.f };
-	XMFLOAT2 iconScale{ 0.300f,0.300f };
+	XMFLOAT2 iconPos{ 573.33f,40.f };
+	XMFLOAT2 iconScale{ 0.400f,0.400f };
 	pComp->SetTextPosition(textPos);
 	pComp->SetIconPosition(iconPos);
 	pComp->SetIconScale(iconScale);

@@ -45,6 +45,8 @@ public:
 	ParticleEmitterSettings& GetSettings() { return m_EmitterSettings; }; //EmitterSettings Getter (by reference) > allows settings changes
 	void DrawImGui();
 	void SetSettings(ParticleEmitterSettings& settings) { m_EmitterSettings = settings; }
+	void SetDisabled(bool disabled) { m_Disabled = disabled; }
+	bool IsDisabled() const { return m_Disabled; }
 
 protected:
 	void Initialize(const SceneContext&) override;
@@ -70,5 +72,6 @@ private:
 	std::wstring m_AssetFile{};
 
 	bool m_DrawImGui{ false };
+	bool m_Disabled{ true };
 };
 
