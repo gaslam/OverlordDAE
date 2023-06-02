@@ -93,7 +93,6 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Materials\Shadow\ColorMaterial_Shadow.cpp" />
     <ClCompile Include="Components\ParticleComponent.cpp" />
     <ClCompile Include="Observers\AmountObserver.cpp" />
     <ClCompile Include="Components\BallComponent.cpp" />
@@ -162,7 +161,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Materials\Shadow\ColorMaterial_Shadow.h" />
     <ClInclude Include="Components\ParticleComponent.h" />
     <ClInclude Include="Observers\AmountObserver.h" />
     <ClInclude Include="Components\BallComponent.h" />
