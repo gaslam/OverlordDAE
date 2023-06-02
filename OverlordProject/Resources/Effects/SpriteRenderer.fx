@@ -11,7 +11,7 @@ SamplerState samPoint
 
 BlendState EnableBlending 
 {     
-	BlendEnable[0] = TRUE;
+	BlendEnable[0] = false;
 	SrcBlend = SRC_ALPHA;
     DestBlend = INV_SRC_ALPHA;
 };
@@ -129,7 +129,10 @@ void MainGS(point VS_DATA vertex[1], inout TriangleStream<GS_DATA> triStream)
 float4 MainPS(GS_DATA input) : SV_TARGET
 {
 
-    return gSpriteTexture.Sample(samPoint, input.TexCoord) * input.Color;
+    float4 finalColor = gSpriteTexture.Sample(samPoint, input.TexCoord) * input.Color;
+    if (finalColor.a < 1.f)
+        discard;
+    return finalColor;
 }
 
 // Default Technique

@@ -84,6 +84,8 @@ float4 PS(VS_OUTPUT input) : SV_TARGET{
 
 	float3 diffuse = CalculateDiffuse(input.Normal,input.TexCoord);
     float opacity = CalculateOpacity(input.TexCoord);
+    if (opacity < 1.f)
+        discard;
 	return float4(diffuse,opacity);
 }
 
