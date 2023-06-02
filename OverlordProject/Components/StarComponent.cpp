@@ -21,11 +21,28 @@ void StarComponent::Initialize(const SceneContext&)
 	pComp->SetTextPosition(textPos);
 	pComp->SetIconPosition(iconPos);
 	pComp->SetIconScale(iconScale);
+	AddObjects();
 }
 
 void StarComponent::Update(const SceneContext&)
 {
 	RemoveStars();
+	if(m_pStars.size() == 0)
+	{
+		return;
+	}
+	auto count{ std::ranges::count_if(m_pStars, [](const StarObject* pObject)
+{
+	return pObject->IsWaitingForDeletion();
+}) };
+	const int countInt{ static_cast<int>(count) };
+	if (m_StarsCollected < countInt)
+	{
+		GameObject* gameObject = GetGameObject();
+		m_StarsCollected = countInt;
+		Event eventType = Event(EventType::NUMBER_CHANGED);
+		m_AmountObserver->OnNotify(gameObject, eventType);
+	}
 }
 
 void StarComponent::RemoveStars()
@@ -37,7 +54,6 @@ void StarComponent::RemoveStars()
 			if (object->IsMarkedAsDeleted())
 			{
 				gameObject->RemoveChild(object);
-				++starsToAdd;
 				return true;
 			}
 			return false;
@@ -47,14 +63,6 @@ void StarComponent::RemoveStars()
 		return;
 	}
 	m_pStars.erase(it);
-	m_StarsCollected += starsToAdd;
-	Event eventType = Event(EventType::NUMBER_CHANGED);
-	m_AmountObserver->OnNotify(gameObject, eventType);
-
-	if(m_pStars.size() == 0)
-	{
-		m_pScene->End();
-	}
 }
 
 void StarComponent::OnGUI()
@@ -63,15 +71,14 @@ void StarComponent::OnGUI()
 	if(ImGui::CollapsingHeader("Stars UI") && pComp)
 	{
 		pComp->DrawImGUI();
-	}
-
-	for(int i{}; i < m_pStars.size(); ++i)
-	{
-		int iPlus1{ i + 1 };
-		std::string particleTitle{ "Particle " + std::to_string(iPlus1)};
-		if(ImGui::CollapsingHeader(particleTitle.c_str()))
+		for (int i{}; i < m_pStars.size(); ++i)
 		{
-			m_pStars[i]->DrawImGUI();
+			int iPlus1{ i + 1 };
+			std::string particleTitle{ "Particle " + std::to_string(iPlus1)};
+			if (ImGui::CollapsingHeader(particleTitle.c_str()))
+			{
+				m_pStars[i]->DrawImGUI();
+			}
 		}
 	}
 }

@@ -6,17 +6,17 @@ void ParticleComponent::Initialize(const SceneContext&)
 	ParticleEmitterSettings settings{};
 	settings.velocity = { 0.f,2.f,0.f };
 	settings.minSize = 0.f;
-	settings.maxSize = 2.f;
-	settings.minEnergy = 1.f;
-	settings.maxEnergy = 2.f;
-	settings.minScale = 1.f;
+	settings.maxSize = .5f;
+	settings.minEnergy = 0.f;
+	settings.maxEnergy = 0.3f;
+	settings.minScale = 0.f;
 	settings.maxScale = 1.f;
-	settings.minEmitterRadius = .2f;
+	settings.minEmitterRadius = 0.f;
 	settings.maxEmitterRadius = .2f;
 	settings.color = { 1.f,1.f,1.f, .6f };
 
 	GameObject* gameObject{ GetGameObject() };
-	m_pEmiter = gameObject->AddComponent(new ParticleEmitterComponent(L"Textures/Star_Particle.png", settings, 21));
+	m_pEmiter = gameObject->AddComponent(new ParticleEmitterComponent(m_AssetFile, settings, 21));
 }
 
 void ParticleComponent::Update(const SceneContext& sceneContext)
@@ -32,14 +32,9 @@ void ParticleComponent::Update(const SceneContext& sceneContext)
 		return;
 	}
 
-	if(m_pEmiter->IsDisabled())
+	if(!m_pEmiter->IsDisabled())
 	{
-		m_pEmiter->SetDisabled(false);
-	}
-	if (m_AccumulatedTime >= m_TimeBeforeDeletion)
-	{
-		m_IsActive = false;
-		m_CanBeDeleted = true;
+		m_pEmiter->SetDisabled(true);
 	}
 }
 

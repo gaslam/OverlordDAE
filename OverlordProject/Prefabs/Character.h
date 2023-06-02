@@ -83,6 +83,7 @@ private:
 	FMOD::Sound* m_pWooHooSound{};
 
 	bool m_StoppedRunning{};
+	bool m_IsCameraActive{ true };
 
 	enum CharacterState : int {
 		Idle,

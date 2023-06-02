@@ -44,8 +44,8 @@ void ThirdPersonCamera::Update(const SceneContext& sceneContext)
 			rotSpeed = m_ControllerRotSpeed;
 		}
 		const float elapsedTime = sceneContext.pGameTime->GetElapsed();
-		m_TotalYaw += -look.x * rotSpeed * elapsedTime;
-		m_TotalPitch += -look.y * rotSpeed * elapsedTime;
+		m_TotalYaw += look.x * rotSpeed * elapsedTime;
+		m_TotalPitch += look.y * rotSpeed * elapsedTime;
 
 		if (m_TotalPitch > m_MaxAngle)
 		{
@@ -105,8 +105,8 @@ void ThirdPersonCamera::Update(const SceneContext& sceneContext)
 			oldDist = m_Distance;
 		}
 		auto finalBackwardsDir = backwards * oldDist;
-		GetTransform()->Translate(finalBackwardsDir);
-		GetTransform()->Rotate(m_TotalPitch, m_TotalYaw, 0.f);
+		m_pCamera->GetTransform()->Translate(finalBackwardsDir);
+		m_pCamera->GetTransform()->Rotate(m_TotalPitch, m_TotalYaw, 0.f);
 		XMStoreFloat3(&m_BackwardsDir, finalBackwardsDir);
 	}
 }

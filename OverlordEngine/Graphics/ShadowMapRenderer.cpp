@@ -80,7 +80,7 @@ void ShadowMapRenderer::Begin(const SceneContext& sceneContext)
 	const Light light = sceneContext.pLights->GetDirectionalLight();
 	const auto lightDir = XMLoadFloat4(&light.direction);
 	const auto lightPos = XMLoadFloat4(&light.position);
-	const auto focusPosition = XMVectorAdd(XMVector4Normalize(lightDir), lightPos);
+	const auto focusPosition = XMVectorAdd(lightDir, lightPos);
 	auto lightView = XMMatrixLookAtLH(lightPos, focusPosition, { 0,1,0,0 });
 	//- Use XMMatrixLookAtLH to create a View Matrix
 	//		*eyePosition: Position of the Direction Light (SceneContext::pLights > Retrieve Directional Light)
@@ -96,8 +96,7 @@ void ShadowMapRenderer::Begin(const SceneContext& sceneContext)
 	m_GameContext.pGame->SetRenderTarget(m_pShadowRenderTarget);
 
 	//5. Clear the ShadowMap rendertarget (RenderTarget::Clear)
-	const XMFLOAT4 clearColor{ 0.0f, 0.2f, 0.4f, 1.0f };
-	m_pShadowRenderTarget->Clear(clearColor);
+	m_pShadowRenderTarget->Clear();
 }
 
 void ShadowMapRenderer::DrawMesh(const SceneContext& sceneContext, MeshFilter* pMeshFilter, const XMFLOAT4X4& meshWorld, const std::vector<XMFLOAT4X4>& meshBones)

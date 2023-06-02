@@ -3,7 +3,7 @@ class ParticleComponent :
     public BaseComponent
 {
 public:
-    explicit ParticleComponent() {};
+    explicit ParticleComponent(const std::wstring& assetFile) : m_AssetFile{assetFile} {};
     void Initialize(const SceneContext& sceneContext) override;
     void Update(const SceneContext&) override;
     bool GetIsActive() const { return m_IsActive; }
@@ -19,9 +19,9 @@ protected:
 private:
     bool m_CanBeDeleted{false};
     bool m_IsActive{false};
-    float m_TimeToBeActive{ 0.5f };
-    float m_TimeBeforeDeletion{ 0.5f };
+    float m_TimeToBeActive{ 1.f };
     float m_AccumulatedTime{  };
+    std::wstring m_AssetFile{};
     ParticleEmitterComponent* m_pEmiter{};
 };
 

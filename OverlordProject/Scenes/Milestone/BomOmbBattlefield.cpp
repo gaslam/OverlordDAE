@@ -125,6 +125,7 @@ void BomOmbBattlefield::Initialize()
 	AddPostProcessingEffect(m_Pixelate);
 
 	m_Pixelate->SetIsEnabled(true);
+	AddCollectibles();
 
 	ModelComponent* modelComponentFences = new ModelComponent{ L"Meshes/Environments/Level_1_Fences.ovm" };
 	auto object2 = new GameObject{};
@@ -133,6 +134,8 @@ void BomOmbBattlefield::Initialize()
 
 
 	ModelUtils::AddTextureToModelComponent(modelComponentFences, L"Textures/Environments/Level_1/Fences/textureData.json");
+
+
 }
 
 void BomOmbBattlefield::AddCollectibles()
@@ -157,9 +160,7 @@ void BomOmbBattlefield::LoadScene()
 
 	pFmod->playSound(m_pBackgroundMusic, nullptr, false, &m_pChannel2D);
 
-	AddCollectibles();
-
-	//m_pStarComponent->InitObjects();
+	m_pStarComponent->InitObjects();
 	m_pCoinComponent->InitObjects();
 	auto pTransform{ m_pPlayableCharacter->GetTransform() };
 	pTransform->Scale(1.f, 1.f, 1.f);

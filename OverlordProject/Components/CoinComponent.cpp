@@ -30,18 +30,28 @@ void CoinComponent::Initialize(const SceneContext&)
 void CoinComponent::Update(const SceneContext&)
 {
 	RemoveCoins();
+	auto count{ std::ranges::count_if(m_pCoins, [](const CoinObject* pObject)
+{
+	return pObject->IsWaitingForDeletion();
+}) };
+	const int countInt{ static_cast<int>(count) };
+	if (m_CoinsCollected < countInt)
+	{
+		GameObject* gameObject = GetGameObject();
+		m_CoinsCollected = countInt;
+		Event eventType = Event(EventType::NUMBER_CHANGED);
+		m_AmountObserver->OnNotify(gameObject, eventType);
+	}
 }
 
 void CoinComponent::RemoveCoins()
 {
 	GameObject* gameObject = GetGameObject();
-	int coinsToAdd{};
-	auto it = std::find_if(m_pCoins.begin(), m_pCoins.end(), [&coinsToAdd,gameObject,this](CoinObject* object)
+	auto it = std::find_if(m_pCoins.begin(), m_pCoins.end(), [gameObject,this](CoinObject* object)
 	{
 		if(object->IsMarkedAsDeleted())
 		{
 			gameObject->RemoveChild(object);
-			++coinsToAdd;
 			return true;
 		}
 		return false;
@@ -51,9 +61,6 @@ void CoinComponent::RemoveCoins()
 		return;
 	}
 	m_pCoins.erase(it);
-	m_CoinsCollected += coinsToAdd;
-	Event eventType = Event(EventType::NUMBER_CHANGED);
-	m_AmountObserver->OnNotify(gameObject, eventType);
 }
 
 void CoinComponent::OnGUI()

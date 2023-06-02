@@ -9,6 +9,8 @@
 #include "Materials/DiffuseMaterial.h"
 #include "Materials/DiffuseMaterial_Skinned.h"
 #include "Materials/OpacityMaterial.h"
+#include "Materials/Shadow/DiffuseMaterial_Shadow.h"
+#include "Materials/Shadow/DiffuseMaterial_Shadow_Skinned.h"
 
 using json = nlohmann::json;
 
@@ -18,7 +20,9 @@ namespace ModelUtils {
 	{
 		diffuse,
 		opacity,
-		skinned
+		skinned,
+		shadowSkinned,
+		shadow
 	};
 
 	struct TextureInfo
@@ -34,6 +38,32 @@ namespace ModelUtils {
 		const std::wstring assetDiffuseFile = texturePath + info.name + L"_diffuse." + info.extension;
 		auto fullPath = ContentManager::GetFullAssetPath(assetDiffuseFile);
 		DiffuseMaterial_Skinned* pOpMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Skinned>();
+		if (fs::exists(fullPath))
+		{
+			pOpMaterial->SetDiffuseTexture(assetDiffuseFile);
+		}
+
+		return pOpMaterial;
+	}
+
+	inline DiffuseMaterial_Shadow_Skinned* CreateDiffuseShadowSkinnedMaterial(const std::wstring& texturePath, const TextureInfo& info)
+	{
+		const std::wstring assetDiffuseFile = texturePath + info.name + L"_diffuse." + info.extension;
+		auto fullPath = ContentManager::GetFullAssetPath(assetDiffuseFile);
+		DiffuseMaterial_Shadow_Skinned* pOpMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow_Skinned>();
+		if (fs::exists(fullPath))
+		{
+			pOpMaterial->SetDiffuseTexture(assetDiffuseFile);
+		}
+
+		return pOpMaterial;
+	}
+
+	inline DiffuseMaterial_Shadow* CreateDiffuseShadowMaterial(const std::wstring& texturePath, const TextureInfo& info)
+	{
+		const std::wstring assetDiffuseFile = texturePath + info.name + L"_diffuse." + info.extension;
+		auto fullPath = ContentManager::GetFullAssetPath(assetDiffuseFile);
+		DiffuseMaterial_Shadow* pOpMaterial = MaterialManager::Get()->CreateMaterial<DiffuseMaterial_Shadow>();
 		if (fs::exists(fullPath))
 		{
 			pOpMaterial->SetDiffuseTexture(assetDiffuseFile);
@@ -103,7 +133,7 @@ namespace ModelUtils {
 		auto meshes = pModelComp->GetMeshFilter()->GetMeshes();
 		meshes[0].name = L"test";
 
-		for(size_t i{}; i < texturesSize; ++i)
+		for (size_t i{}; i < texturesSize; ++i)
 		{
 			TextureInfo info{};
 			info.meshIdx = textures.at(i)["meshIndex"];
@@ -118,7 +148,7 @@ namespace ModelUtils {
 
 			//...
 			std::string strName = textures.at(i)["name"];
-			std::wstring strName2 ( strName.length(), L' ' ); // Make room for characters
+			std::wstring strName2(strName.length(), L' '); // Make room for characters
 
 			// Copy string to wstring.
 			std::copy(strName.begin(), strName.end(), strName2.begin());
@@ -127,12 +157,12 @@ namespace ModelUtils {
 			switch (info.type)
 			{
 			case MaterialType::opacity:
-				{
+			{
 				auto pMat = CreateOpacityMaterial(filePathW, info);
 				UINT8 meshId = static_cast<UINT8>(info.meshIdx);
 				pModelComp->SetMaterial(pMat, meshId);
 				break;
-				}
+			}
 			case MaterialType::diffuse:
 			{
 				auto pMat = CreateDiffuseMaterial(filePathW, info);
@@ -147,30 +177,27 @@ namespace ModelUtils {
 				pModelComp->SetMaterial(pMat, meshId);
 				break;
 			}
-			default: ;
+			case MaterialType::shadowSkinned:
+			{
+				auto pMat = CreateDiffuseShadowSkinnedMaterial(filePathW, info);
+				UINT8 meshId = static_cast<UINT8>(info.meshIdx);
+				pModelComp->SetMaterial(pMat, meshId);
+				break;
+			}
+			case MaterialType::shadow:
+			{
+				auto pMat = CreateDiffuseShadowMaterial(filePathW, info);
+				UINT8 meshId = static_cast<UINT8>(info.meshIdx);
+				pModelComp->SetMaterial(pMat, meshId);
+				break;
+			}
+			default:;
 			}
 		}
-		
+	}
 
-		//auto& mesh = pModelComp->GetMeshFilter()->GetMeshes()[meshIdx];
-		//std::wstring assetFile = texturePath + filename + L"_diffuse." + extension;
-		//auto fullPath = ContentManager::GetFullAssetPath(assetFile);
-		//if (fs::exists(fullPath))
-		//{
-		//	const auto pMaterial = MaterialManager::Get()->CreateMaterial<T>();
-		//	pModelComp->SetMaterial(pMaterial, mesh.id);
-		//	pMaterial->SetDiffuseTexture(assetFile);
-		//	if (auto pOpMaterial = reinterpret_cast<OpacityMaterial*>(pMaterial))
-		//	{
-		//		assetFile = texturePath + mesh.name + L"_map." + extension;
-		//		fullPath = ContentManager::GetFullAssetPath(assetFile);
-		//		if (fs::exists(fullPath))
-		//		{
-		//			pOpMaterial->SetOpacityTexture(assetFile);
-		//			pOpMaterial->SetUseOpacityMap(true);
-		//		}
-		//	}
-		//}
-
+	inline FMOD_VECTOR ToFmod(XMFLOAT3 v)
+	{
+		return FMOD_VECTOR(v.x, v.y, v.z);
 	}
 }

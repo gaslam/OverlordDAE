@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Character.h"
 
+#include "ProjectUtils.h"
 #include "Prefabs/ThirdPersonCamera.h"
 
 Character::Character(const CharacterDesc& characterDesc) :
@@ -17,7 +18,7 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 
 	//Camera
 	const auto pCamera = AddChild(new ThirdPersonCamera());
-	m_pCameraComponent = pCamera->GetComponent<CameraComponent>();
+	m_pCameraComponent = pCamera->GetComponent<CameraComponent>(true);
 	m_pCameraComponent->SetActive(true); //Uncomment to make this camera the active camera
 	auto soundManager = SoundManager::Get();
 	auto pSoundSystem = soundManager->GetSystem();
@@ -26,11 +27,6 @@ void Character::Initialize(const SceneContext& /*sceneContext*/)
 	result = pSoundSystem->createSound("Resources/Sounds/Mario/sm64_mario_hoohoo.wav", FMOD_DEFAULT, nullptr, &m_pWooHooSound);
 	soundManager->ErrorCheck(result);
 	m_pChannel3D->set3DMinMaxDistance(0.f, 100.f);
-}
-
-inline FMOD_VECTOR ToFmod(XMFLOAT3 v)
-{
-	return FMOD_VECTOR(v.x, v.y, v.z);
 }
 
 void Character::Update(const SceneContext& sceneContext)
@@ -219,8 +215,8 @@ void Character::Update(const SceneContext& sceneContext)
 	//The above is a simple implementation of Movement Dynamics, adjust the code to further improve the movement logic and behaviour.
 	//Also, it can be usefull to use a seperate RayCast to check if the character is grounded (more responsive)
 
-	auto playerSoundPos = ToFmod(GetTransform()->GetPosition());
-	auto soundVel = ToFmod(m_TotalVelocity);
+	auto playerSoundPos = ModelUtils::ToFmod(GetTransform()->GetPosition());
+	auto soundVel = ModelUtils::ToFmod(m_TotalVelocity);
 	m_pChannel3D->set3DAttributes(&playerSoundPos, &soundVel);
 }
 

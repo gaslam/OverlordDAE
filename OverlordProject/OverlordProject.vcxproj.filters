@@ -50,6 +50,7 @@
     <ClCompile Include="Observers\AmountObserver.cpp" />
     <ClCompile Include="Materials\SkyboxMaterial.cpp" />
     <ClCompile Include="Components\ParticleComponent.cpp" />
+    <ClCompile Include="Materials\Shadow\ColorMaterial_Shadow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
@@ -103,5 +104,6 @@
     <ClInclude Include="Observers\AmountObserver.h" />
     <ClInclude Include="Materials\SkyboxMaterial.h" />
     <ClInclude Include="Components\ParticleComponent.h" />
+    <ClInclude Include="Materials\Shadow\ColorMaterial_Shadow.h" />
   </ItemGroup>
 </Project>
